@@ -1,1 +1,9 @@
 src/someshit.c
+src/*.o
+src/*.a
+src/test
+src/*.gcda
+src/*.gcno
+src/*.gcov
+src/*.html
+src/*.css

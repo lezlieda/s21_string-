@@ -1,17 +1,20 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "suitecases.h"
 
-int main() {
-  char str[16] = "1234567890";
-  char substr[8] = "world!";
-  char *res = memcpy(str, substr, 6);
-  char *res_s21 = s21_memcpy(str, substr, 6);
+void run_testcase(Suite *testcase) {
+  SRunner *runner = srunner_create(testcase);
+  srunner_run_all(runner, CK_NORMAL);
+  srunner_free(runner);
+}
 
-  printf("%s\n", res);
-  printf("%s\n", res_s21);
+void run_all_testcases() {
+  Suite *list_cases[] = {suite_s21_memcpy(), NULL};
+  for (int i = 0; list_cases[i] != NULL; i++) {
+    run_testcase(list_cases[i]);
+  }
+}
+
+int main() {
+  run_all_testcases();
 
   return 0;
 }

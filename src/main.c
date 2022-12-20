@@ -1,3 +1,4 @@
+#include "s21_string.h"
 #include "suitecases.h"
 
 void run_testcase(Suite *testcase) {
@@ -7,7 +8,8 @@ void run_testcase(Suite *testcase) {
 }
 
 void run_all_testcases() {
-  Suite *list_cases[] = {suite_s21_memcpy(), NULL};
+  Suite *list_cases[] = {suite_s21_memcpy(), suite_s21_strcat(),
+                         suite_s21_strchr(), NULL};
   for (int i = 0; list_cases[i] != NULL; i++) {
     run_testcase(list_cases[i]);
   }

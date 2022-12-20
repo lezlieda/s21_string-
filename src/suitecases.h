@@ -7,5 +7,7 @@
 #include <string.h>
 
 Suite *suite_s21_memcpy();
+Suite *suite_s21_strcat();
+Suite *suite_s21_strchr();
 
 #endif

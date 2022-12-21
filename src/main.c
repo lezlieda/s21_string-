@@ -15,7 +15,8 @@ void run_all_testcases() {
       suite_s21_to_upper(), suite_s21_to_lower(), suite_s21_insert(),
       suite_s21_trim(),     suite_s21_memcmp(),   suite_s21_memmove(),
       suite_s21_memset(),   suite_s21_strncmp(),  suite_s21_strncpy(),
-      suite_s21_strcspn(),  suite_s21_strncat(),  NULL};
+      suite_s21_strcspn(),  suite_s21_strncat(),  suite_s21_strspn(),
+      suite_s21_strrchr(),  suite_s21_strpbrk(),  NULL};
   for (int i = 0; list_cases[i] != NULL; i++) {
     run_testcase(list_cases[i]);
   }

@@ -23,9 +23,9 @@ char *s21_strncpy(char *dest, const char *src, s21_size_t n);
 s21_size_t s21_strcspn(const char *str1, const char *str2);
 char *s21_strerror(int errnum);  // TODO
 s21_size_t s21_strlen(char *str);
-char *s21_strpbrk(const char *str1, const char *str2);      // TODO
-char *s21_strrchr(const char *str, int c);                  // TODO
-s21_size_t s21_strspn(const char *str1, const char *str2);  // TODO
+char *s21_strpbrk(const char *str1, const char *str2);  // TODO
+char *s21_strrchr(const char *str, int c);
+s21_size_t s21_strspn(const char *str1, const char *str2);
 char *s21_strstr(char *str, char *substr);
 char *s21_strtok(char *str, const char *delim);
 

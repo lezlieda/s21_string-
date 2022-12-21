@@ -24,10 +24,10 @@ test: s21_string.a
 gcov_report:
 	$(CC) --coverage $(CFLAGS) $(S21_STRING_C)
 	ar r s21_string.a $(S21_STRING_O)
-	rm -rf *.o
 	ranlib s21_string.a
 	$(CC) $(CFLAGS) $(S21_SUITE_C) main.c
 	$(CC) --coverage $(OFLAGS) test $(S21_SUITE_O) main.o s21_string.a -lcheck
+	rm -rf *.o *.a
 	./test
 	# gcov s21*.gcda
 	gcovr -r . --html --html-details -o report.html

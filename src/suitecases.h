@@ -22,6 +22,9 @@ Suite *suite_s21_strncmp();
 Suite *suite_s21_strncpy();
 Suite *suite_s21_strcspn();
 Suite *suite_s21_strncat();
+Suite *suite_s21_strspn();
+Suite *suite_s21_strrchr();
+Suite *suite_s21_strpbrk();
 
 Suite *suite_s21_to_upper();
 Suite *suite_s21_to_lower();

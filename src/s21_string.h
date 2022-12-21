@@ -20,6 +20,8 @@ char *s21_strstr(char *str, char *substr);
 void *s21_memchr(const void *str, int c, s21_size_t n);
 int s21_memcmp(const void *str1, const void *str2, s21_size_t n);
 void *s21_memmove(void *dest, const void *src, s21_size_t n);
+void *s21_memset(void *str, int c, s21_size_t n);
+int s21_strncmp(char *str1, char *str2, s21_size_t n);
 
 /* Special string processing functions (from the String class in C#) */
 void *s21_to_upper(const char *str);

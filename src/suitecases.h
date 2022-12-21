@@ -17,6 +17,8 @@ Suite *suite_s21_strtok();
 Suite *suite_s21_memchr();
 Suite *suite_s21_memcmp();
 Suite *suite_s21_memmove();
+Suite *suite_s21_memset();
+Suite *suite_s21_strncmp();
 
 Suite *suite_s21_to_upper();
 Suite *suite_s21_to_lower();

@@ -6,6 +6,5 @@ void *s21_memmove(void *dest, const void *src, s21_size_t n) {
   while (n--) {
     *d++ = *s++;
   }
-
   return dest;
 }

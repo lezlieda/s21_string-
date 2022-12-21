@@ -45,6 +45,13 @@ START_TEST(s21_strchr_7) {
 }
 END_TEST
 
+START_TEST(s21_strchr_8) {
+  char str[64] = "";
+  ck_assert_ptr_null(strchr(str, 'x'));
+  ck_assert_ptr_null(s21_strchr(str, 'x'));
+}
+END_TEST
+
 Suite *suite_s21_strchr() {
   Suite *s;
   TCase *tc_case;
@@ -61,6 +68,7 @@ Suite *suite_s21_strchr() {
   tcase_add_test(tc_case, s21_strchr_5);
   tcase_add_test(tc_case, s21_strchr_6);
   tcase_add_test(tc_case, s21_strchr_7);
+  tcase_add_test(tc_case, s21_strchr_8);
 
   suite_add_tcase(s, tc_case);
 

@@ -57,7 +57,7 @@ START_TEST(s21_memcmp_8) {
 }
 END_TEST
 
-Suite *s21_memcmp_suite() {
+Suite *suite_s21_memcmp() {
   Suite *s;
   TCase *tc_case;
 

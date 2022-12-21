@@ -6,6 +6,7 @@ START_TEST(s21_trim_1) {
   char *trim_chars = "H";
   char *res = s21_trim(src, trim_chars);
   ck_assert_str_eq(res, "ello, world!");
+  if (res != NULL) free(res);
 }
 END_TEST
 
@@ -14,6 +15,7 @@ START_TEST(s21_trim_2) {
   char *trim_chars = "!d";
   char *res = s21_trim(src, trim_chars);
   ck_assert_str_eq(res, "Hello, worl");
+  if (res != NULL) free(res);
 }
 END_TEST
 
@@ -22,6 +24,7 @@ START_TEST(s21_trim_3) {
   char *trim_chars = "H!";
   char *res = s21_trim(src, trim_chars);
   ck_assert_str_eq(res, "ello, world");
+  if (res != NULL) free(res);
 }
 END_TEST
 
@@ -30,6 +33,7 @@ START_TEST(s21_trim_4) {
   char *trim_chars = "H!d";
   char *res = s21_trim(src, trim_chars);
   ck_assert_str_eq(res, "ello, worl");
+  if (res != NULL) free(res);
 }
 END_TEST
 
@@ -38,6 +42,7 @@ START_TEST(s21_trim_5) {
   char *trim_chars = "359z";
   char *res = s21_trim(src, trim_chars);
   ck_assert_str_eq(res, "Hello, world!");
+  if (res != NULL) free(res);
 }
 END_TEST
 
@@ -46,6 +51,7 @@ START_TEST(s21_trim_6) {
   char *trim_chars = NULL;
   char *res = s21_trim(src, trim_chars);
   ck_assert_ptr_null(res);
+  if (res != NULL) free(res);
 }
 END_TEST
 
@@ -54,6 +60,7 @@ START_TEST(s21_trim_7) {
   char *trim_chars = "H";
   char *res = s21_trim(src, trim_chars);
   ck_assert_ptr_null(res);
+  if (res != NULL) free(res);
 }
 END_TEST
 

@@ -17,9 +17,6 @@ void *s21_to_lower(const char *str) {
       if (*p >= 'A' && *p <= 'Z') *p += 32;
       p++;
     }
-    if (res != S21_NULL) {
-      free(res);
-    }
   }
   return !flag ? (char *)res : S21_NULL;
 }

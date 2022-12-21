@@ -30,9 +30,6 @@ void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
         i++;
       }
       *p = '\0';
-      if (res != S21_NULL) {
-        free(res);
-      }
     }
   }
   return !flag ? (char *)res : S21_NULL;

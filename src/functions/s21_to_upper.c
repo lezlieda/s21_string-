@@ -17,9 +17,6 @@ void *s21_to_upper(const char *str) {
       if (*p >= 'a' && *p <= 'z') *p -= 32;
       p++;
     }
-    if (res != S21_NULL) {
-      free(res);
-    }
   }
   return !flag ? (char *)res : S21_NULL;
 }

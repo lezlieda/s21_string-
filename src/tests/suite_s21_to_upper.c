@@ -6,6 +6,7 @@ START_TEST(s21_to_upper_1) {
   char res[] = "LOREM IPSUM DOLOR SIT AMET";
   char *p = s21_to_upper(str);
   ck_assert_str_eq(p, res);
+  if (p != NULL) free(p);
 }
 END_TEST
 
@@ -14,6 +15,7 @@ START_TEST(s21_to_upper_2) {
   char res[] = "LOREM IPSUM DOLOR SIT AMET";
   char *p = s21_to_upper(str);
   ck_assert_str_eq(p, res);
+  if (p != NULL) free(p);
 }
 END_TEST
 
@@ -22,6 +24,7 @@ START_TEST(s21_to_upper_3) {
   char res[] = "359";
   char *p = s21_to_upper(str);
   ck_assert_str_eq(p, res);
+  if (p != NULL) free(p);
 }
 END_TEST
 
@@ -30,6 +33,7 @@ START_TEST(s21_to_upper_4) {
   char res[] = "\0";
   char *p = s21_to_upper(str);
   ck_assert_str_eq(p, res);
+  if (p != NULL) free(p);
 }
 END_TEST
 
@@ -37,6 +41,7 @@ START_TEST(s21_to_upper_5) {
   const char *str = NULL;
   char *p = s21_to_upper(str);
   ck_assert_ptr_null(p);
+  if (p != NULL) free(p);
 }
 END_TEST
 

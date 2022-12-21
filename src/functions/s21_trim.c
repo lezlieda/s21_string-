@@ -22,9 +22,6 @@ void *s21_trim(const char *src, const char *trim_chars) {
     }
     p++;
     *p = '\0';  // ставим терминатор
-    if (res != S21_NULL) {
-      free(res);
-    }
   }
   return !flag ? (char *)res : S21_NULL;
 }

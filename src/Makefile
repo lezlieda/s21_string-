@@ -30,7 +30,7 @@ gcov_report:
 	$(CC) --coverage $(OFLAGS) test $(S21_SUITE_O) main.o s21_string.a -lcheck
 	./test
 	# gcov s21*.gcda
-	# gcovr -r . --html --html-details -o report.html
+	gcovr -r . --html --html-details -o report.html
 
 clean:
 	rm -rf *.o *.a test *.gcda *.gcno *.gcov *.html *.css

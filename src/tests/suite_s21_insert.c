@@ -6,6 +6,7 @@ START_TEST(s21_insert_1) {
   char *str = "my ";
   char *res = s21_insert(src, str, 0);
   ck_assert_str_eq(res, "my Hello, world!");
+  if (res != NULL) free(res);
 }
 END_TEST
 
@@ -14,6 +15,7 @@ START_TEST(s21_insert_2) {
   char *str = "my ";
   char *res = s21_insert(src, str, 7);
   ck_assert_str_eq(res, "Hello, my world!");
+  if (res != NULL) free(res);
 }
 END_TEST
 
@@ -22,6 +24,7 @@ START_TEST(s21_insert_3) {
   char *str = "my ";
   char *res = s21_insert(src, str, 13);
   ck_assert_str_eq(res, "Hello, world!my ");
+  if (res != NULL) free(res);
 }
 END_TEST
 
@@ -30,6 +33,7 @@ START_TEST(s21_insert_4) {
   char *str = "my ";
   char *res = s21_insert(src, str, 144);
   ck_assert_ptr_null(res);
+  if (res != NULL) free(res);
 }
 END_TEST
 
@@ -38,6 +42,7 @@ START_TEST(s21_insert_5) {
   char *str = NULL;
   char *res = s21_insert(src, str, 2);
   ck_assert_ptr_null(res);
+  if (res != NULL) free(res);
 }
 END_TEST
 
@@ -46,6 +51,7 @@ START_TEST(s21_insert_6) {
   char *str = "my ";
   char *res = s21_insert(src, str, 2);
   ck_assert_ptr_null(res);
+  if (res != NULL) free(res);
 }
 END_TEST
 

@@ -20,6 +20,7 @@ Suite *suite_s21_memmove();
 Suite *suite_s21_memset();
 Suite *suite_s21_strncmp();
 Suite *suite_s21_strncpy();
+Suite *suite_s21_strcspn();
 
 Suite *suite_s21_to_upper();
 Suite *suite_s21_to_lower();

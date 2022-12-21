@@ -23,6 +23,7 @@ void *s21_memmove(void *dest, const void *src, s21_size_t n);
 void *s21_memset(void *str, int c, s21_size_t n);
 int s21_strncmp(char *str1, char *str2, s21_size_t n);
 char *s21_strncpy(char *dest, char *src, s21_size_t n);
+s21_size_t s21_strcspn(const char *str1, const char *str2);
 
 /* Special string processing functions (from the String class in C#) */
 void *s21_to_upper(const char *str);

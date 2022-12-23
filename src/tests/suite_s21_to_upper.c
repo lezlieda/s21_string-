@@ -45,6 +45,15 @@ START_TEST(s21_to_upper_5) {
 }
 END_TEST
 
+START_TEST(s21_to_upper_6) {
+  const char str[] = "Lorem {ipsum} dolor sit amet";
+  char res[] = "LOREM {IPSUM} DOLOR SIT AMET";
+  char *p = s21_to_upper(str);
+  ck_assert_str_eq(p, res);
+  if (p != NULL) free(p);
+}
+END_TEST
+
 Suite *suite_s21_to_upper() {
   Suite *suite = suite_create("s21_to_upper");
   TCase *tcase = tcase_create("case_s21_to_upper");
@@ -54,6 +63,7 @@ Suite *suite_s21_to_upper() {
   tcase_add_test(tcase, s21_to_upper_3);
   tcase_add_test(tcase, s21_to_upper_4);
   tcase_add_test(tcase, s21_to_upper_5);
+  tcase_add_test(tcase, s21_to_upper_6);
 
   suite_add_tcase(suite, tcase);
   return suite;

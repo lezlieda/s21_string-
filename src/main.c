@@ -25,9 +25,9 @@ void run_all_testcases() {
 }
 
 int main() {
-  // run_all_testcases();
+  run_all_testcases();
 
-  printf("sys: %s\n", getenv("OPERATING_SYSTEM"));
+  // printf("sys: %s\n", getenv("OPERATING_SYSTEM"));
 
   return 0;
 }

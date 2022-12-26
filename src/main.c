@@ -25,9 +25,23 @@ void run_all_testcases() {
 }
 
 int main() {
-  run_all_testcases();
+  // run_all_testcases();
 
-  // printf("sys: %s\n", getenv("OPERATING_SYSTEM"));
+  for (int i = 130; i < 144; i++) {
+    char *str = strerror(i);
+    printf("%s\n", str);
+    // free(str);
+  }
+
+  if (__macosx__) {
+    printf("MacOSX\n");
+  } else if (__linux__) {
+    printf("Linux\n");
+  } else if (__windows__) {
+    printf("Windows\n");
+  } else {
+    printf("Unknown OS\n");
+  }
 
   return 0;
 }

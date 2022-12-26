@@ -43,13 +43,13 @@ START_TEST(s21_strcmp_6) {
 }
 END_TEST
 
-Suite *s21_strcmp_suite() {
+Suite *suite_s21_strcmp() {
   Suite *s;
   TCase *tc_case;
 
   s = suite_create("s21_strcmp");
 
-  tc_case = tcase_create("positives");
+  tc_case = tcase_create("case_s21_strcmp");
 
   tcase_add_test(tc_case, s21_strcmp_1);
   tcase_add_test(tc_case, s21_strcmp_2);

@@ -13,7 +13,7 @@ void run_all_testcases() {
   Suite *list_cases[] = {suite_s21_memcpy(),
                          suite_s21_strcat(),
                          suite_s21_strchr(),
-                         s21_strcmp_suite(),
+                         suite_s21_strcmp(),
                          suite_s21_strcpy(),
                          suite_s21_strlen(),
                          suite_s21_strstr(),
@@ -42,6 +42,14 @@ void run_all_testcases() {
 
 int main() {
   run_all_testcases();
+
+  // char *str = "Lorem ipsum";
+  // // char s21_dest[100];
+  // char dest[100];
+  // // int s21_spr = s21_sprintf(s21_dest, "str = %s, %d, %c", str, 3, 'a');
+  // int spr = sprintf(dest, "str = %s, %-d, %c", str, 3, 'a');
+  // // printf("s21_spr = %d; %s\n", s21_spr, s21_dest);
+  // printf("    spr = %d, %s\n", spr, dest);
 
   return 0;
 }

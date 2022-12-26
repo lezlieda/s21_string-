@@ -9,7 +9,7 @@
 Suite *suite_s21_memcpy();
 Suite *suite_s21_strcat();
 Suite *suite_s21_strchr();
-Suite *s21_strcmp_suite();
+Suite *suite_s21_strcmp();
 Suite *suite_s21_strcpy();
 Suite *suite_s21_strlen();
 Suite *suite_s21_strstr();

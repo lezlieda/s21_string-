@@ -29,6 +29,8 @@ s21_size_t s21_strspn(const char *str1, const char *str2);
 char *s21_strstr(char *str, char *substr);
 char *s21_strtok(char *str, const char *delim);
 
+int s21_sprintf(char *str, const char *format, ...);
+
 int s21_is_delim(char c, const char *delim);
 
 /* Special string processing functions (from the String class in C#) */

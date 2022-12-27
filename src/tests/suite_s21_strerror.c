@@ -2,7 +2,7 @@
 #include "../suitecases.h"
 
 START_TEST(s21_strerror_1) {
-  for (int i = -1; i < 134; i++) {
+  for (int i = -1; i < 135; i++) {
     ck_assert_str_eq(s21_strerror(i), strerror(i));
   }
 }

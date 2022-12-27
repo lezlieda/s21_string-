@@ -11,23 +11,21 @@ void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
     if (!flag) {
       char *p = (char *)malloc(len_src + len_str + 1);
       res = p;
-      s21_size_t i = 0;
-      while (i < start_index) {
-        *p = src[i];
+      while (start_index--) {
+        *p = *src;
         p++;
-        i++;
+        src++;
+        len_src--;
       }
-      i = 0;
-      while (i < len_str) {
-        *p = str[i];
+      while (len_str--) {
+        *p = *str;
         p++;
-        i++;
+        str++;
       }
-      i = start_index;
-      while (i < len_src) {
-        *p = src[i];
+      while (len_src--) {
+        *p = *src;
         p++;
-        i++;
+        src++;
       }
       *p = '\0';
     }

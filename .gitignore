@@ -7,3 +7,4 @@ src/*.gcno
 src/*.gcov
 src/*.html
 src/*.css
+src/a.out

@@ -37,6 +37,28 @@ int s21_atoi(char *str) {
   return res;
 }
 
+char *s21_itoa(char *dest, int num, int base) {
+  char *p = dest;
+  char *p1, *p2;
+  int digits = 0;
+  do {
+    int rem = num % base;
+    *p++ = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+    digits++;
+  } while (num /= base);
+  *p = '\0';
+  p1 = dest;
+  p2 = p - 1;
+  while (p1 < p2) {
+    char tmp = *p1;
+    *p1 = *p2;
+    *p2 = tmp;
+    p1++;
+    p2--;
+  }
+  return dest;
+}
+
 int s21_is_delim(char c, const char *delim) {
   int res = 0;  // 1 если символ является разделителем, 0 если нет
   while (*delim != '\0') {
@@ -56,53 +78,21 @@ int s21_is_digit(char c) {
   return res;
 }
 
-// int s21_sprinter(char *dest, char *str, s21_sprintf_opt *opt, va_list args,
-//                  char specifier) {
-//   int res = 0;
-//   switch (specifier) {
-//     case 'd':
-//     case 'i':
-//       res = s21_sprinter_int(dest, va_arg(args, int), opt);
-//       break;
-//     case 'o':
-//       res = s21_sprinter_oct(dest, va_arg(args, int), opt);
-//       break;
-//     case 'u':
-//       res = s21_sprinter_uint(dest, va_arg(args, int), opt);
-//       break;
-//     case 'x':
-//       res = s21_sprinter_hex(dest, va_arg(args, int), opt);
-//       break;
-//     case 'X':
-//       res = s21_sprinter_hex_upper(dest, va_arg(args, int), opt);
-//       break;
-//     case 'f':
-//     case 'F':
-//     case 'e':
-//     case 'E':
-//     case 'g':
-//     case 'G':
-//     case 'a':
-//     case 'A':
-//       res = s21_sprinter_float(dest, va_arg(args, double), opt);
-//       break;
-//     case 'c':
-//       res = s21_sprinter_char(dest, va_arg(args, int), opt);
-//       break;
-//     case 's':
-//       res = s21_sprinter_str(dest, va_arg(args, char *), opt);
-//       break;
-//     case 'p':
-//       res = s21_sprinter_ptr(dest, va_arg(args, void *), opt);
-//       break;
-//     case 'n':
-//       res = s21_sprinter_n(dest, va_arg(args, int *), opt);
-//       break;
-//     default:
-//       break;
-//   }
-//   return res;
-// }
+int s21_sprinter(char *dest, char specifier, va_list args,
+                 s21_sprintf_opt opt) {
+  int res = 0;
+  switch (specifier) {
+    case 'c':
+      *dest = va_arg(args, int);
+      *dest++;
+      res = 1;
+      break;
+    case 'd':
+    case 'i':
+      res = s21_itoa(dest, va_arg(args, int), 10);
+      break;
+  }
+}
 
 int s21_sprintf_opt_parse(s21_sprintf_opt *opt, const char *str, va_list args) {
   int res = 0;
@@ -205,30 +195,10 @@ int s21_sprintf_opt_parse(s21_sprintf_opt *opt, const char *str, va_list args) {
   if (s21_is_delim(*p, specifier)) {
     p++;
     res++;
+  } else {
+    res = 0;
   }
-  return res;
-}
-
-char *s21_itoa(char *dest, int num, int base) {
-  char *p = dest;
-  char *p1, *p2;
-  int digits = 0;
-  do {
-    int rem = num % base;
-    *p++ = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
-    digits++;
-  } while (num /= base);
-  *p = '\0';
-  p1 = dest;
-  p2 = p - 1;
-  while (p1 < p2) {
-    char tmp = *p1;
-    *p1 = *p2;
-    *p2 = tmp;
-    p1++;
-    p2--;
-  }
-  return dest;
+  return res;  // возвращает количество обработанных символов, 0 в случае ошибки
 }
 
 int s21_vsprintf(char *str, const char *format, va_list args) {
@@ -246,7 +216,13 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
         format++;
         s21_sprintf_opt opt;
         int step = s21_sprintf_opt_parse(&opt, format, args);
+        if (!step) {
+          flag = 1;
+          break;
+        }
         format += step;
+        res += s21_sprinter(p, *format, args, opt);
+
         printf("opt width: %d\n", opt.width);
         printf("opt precision: %d\n", opt.precision);
         printf("opt len_h: %d\n", opt.len_h);

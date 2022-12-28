@@ -18,16 +18,16 @@ typedef struct s21_sprintf_opt {
 } s21_sprintf_opt;
 
 void s21_sprintf_opt_init(s21_sprintf_opt *opt) {
-  opt->fl_minus = 0;
-  opt->fl_plus = 0;
-  opt->fl_space = 0;
-  opt->fl_hash = 0;
-  opt->fl_zero = 0;
-  opt->width = 0;
-  opt->precision = 0;
-  opt->len_h = 0;
-  opt->len_l = 0;
-  opt->len_L = 0;
+  opt->fl_minus = -1;
+  opt->fl_plus = -1;
+  opt->fl_space = -1;
+  opt->fl_hash = -1;
+  opt->fl_zero = -1;
+  opt->width = -1;
+  opt->precision = -1;
+  opt->len_h = -1;
+  opt->len_l = -1;
+  opt->len_L = -1;
 }
 
 int s21_atoi(char *str) {
@@ -110,23 +110,23 @@ int s21_sprintf_opt_parse(s21_sprintf_opt *opt, const char *str, va_list args) {
     while (s21_is_delim(*p, flags)) {
       switch (*p) {
         case '-':
-          opt->fl_minus++;
+          opt->fl_minus = 1;
           res++;
           break;
         case '+':
-          opt->fl_plus++;
+          opt->fl_plus = 1;
           res++;
           break;
         case ' ':
-          opt->fl_space++;
+          opt->fl_space = 1;
           res++;
           break;
         case '#':
-          opt->fl_hash++;
+          opt->fl_hash = 1;
           res++;
           break;
         case '0':
-          opt->fl_zero++;
+          opt->fl_zero = 1;
           res++;
           break;
         default:
@@ -178,17 +178,17 @@ int s21_sprintf_opt_parse(s21_sprintf_opt *opt, const char *str, va_list args) {
   if (s21_is_delim(*p, length)) {
     switch (*p) {
       case 'h':
-        opt->len_h++;
+        opt->len_h = 1;
         p++;
         res++;
         break;
       case 'l':
-        opt->len_l++;
+        opt->len_l = 1;
         p++;
         res++;
         break;
       case 'L':
-        opt->len_L++;
+        opt->len_L = 1;
         p++;
         res++;
         break;
@@ -246,8 +246,7 @@ ssize_t s21_int_length(int num, int base) {
 int s21_print_char(char *dest, char c, s21_sprintf_opt opt) {
   int res = 0;
   while (*dest != '\0') dest++;
-  printf("*dest = %s, c = %c\n", dest, c);
-  if (opt.fl_minus) {
+  if (opt.fl_minus == 1) {
     *dest = c;
     dest++;
     res++;
@@ -267,7 +266,42 @@ int s21_print_char(char *dest, char c, s21_sprintf_opt opt) {
     res++;
   }
   *dest = '\0';
-  printf("*dest = %s, c = %c\n", dest, c);
+  return res;
+}
+
+int s21_print_str(char *dest, char *str, s21_sprintf_opt opt) {
+  int res = 0;
+  // while (*dest != '\0') dest++;
+  ssize_t len = strlen(str);
+  printf("dest = %s; str = %s; len = %ld\n", dest, str, len);
+  if (opt.precision != -1 && opt.precision < len) {
+    len = opt.precision;
+  }
+  if (opt.fl_minus == 1) {
+    for (int i = 0; i < len; i++) {
+      *dest = str[i];
+      dest++;
+      res++;
+    }
+    for (int i = 0; i < opt.width - len; i++) {
+      *dest = ' ';
+      dest++;
+      res++;
+    }
+  } else {
+    for (int i = 0; i < opt.width - len; i++) {
+      *dest = ' ';
+      dest++;
+      res++;
+    }
+    for (int i = 0; i < len; i++) {
+      *dest = str[i];
+      dest++;
+      res++;
+    }
+  }
+  printf("dest = %s; str = %s; len = %ld\n", dest, str, len);
+  *dest = '\0';
   return res;
 }
 
@@ -275,9 +309,7 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
   int flag = 0;
   if (str == S21_NULL || format == S21_NULL) flag = 1;
   int res = 0;
-  // int d = 0;
-  // int len = 0;
-  // char input[8196];
+  *str = '\0';
   if (!flag) {
     char *p = str;
     while (*format) {
@@ -320,9 +352,7 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
               p += strlen(p);
               break;
             case 's':
-              strcpy(p, va_arg(args, char *));
-              p += strlen(p);
-              res += strlen(p);
+              res += s21_print_str(p, va_arg(args, char *), opt);
               break;
             case 'd':
             case 'i':
@@ -352,16 +382,18 @@ int s21_sprintf(char *str, const char *format, ...) {
 }
 
 int main() {
-  char str[100];
-  // char s[100] = "Hello";
-  int s = s21_sprintf(str, "%%6c = %-*c rrr;", 3, 'a');
-  printf("%s\ns = %d", str, s);
+  char str[100] = "Hello";
+  char s[100] = "kk2k";
+  int sp = s21_sprintf(str, "%s", s);
+  printf("%s\ns = %d", str, sp);
 
   // char s[100] = "Hello";
   // s21_sprintf_opt opt;
   // s21_sprintf_opt_init(&opt);
-  // opt.width = 1;
-  // s21_print_char(s, 'a', opt);
+  // opt.width = 10;
+  // opt.fl_minus = 1;
+  // opt.precision = 3;
+  // s21_print_str(s, " world", opt);
   // printf("%s\n", s);
 
   return 0;

@@ -13,6 +13,7 @@ typedef struct s21_sprintf_opt {
   int len_h;
   int len_l;
   int len_L;
+  char specifier;
 } s21_sprintf_opt;
 
 void s21_sprintf_opt_init(s21_sprintf_opt *opt) {
@@ -76,22 +77,6 @@ int s21_is_digit(char c) {
     res = 1;
   }
   return res;
-}
-
-int s21_sprinter(char *dest, char specifier, va_list args,
-                 s21_sprintf_opt opt) {
-  int res = 0;
-  switch (specifier) {
-    case 'c':
-      *dest = va_arg(args, int);
-      *dest++;
-      res = 1;
-      break;
-    case 'd':
-    case 'i':
-      res = s21_itoa(dest, va_arg(args, int), 10);
-      break;
-  }
 }
 
 int s21_sprintf_opt_parse(s21_sprintf_opt *opt, const char *str, va_list args) {
@@ -192,8 +177,8 @@ int s21_sprintf_opt_parse(s21_sprintf_opt *opt, const char *str, va_list args) {
     }
     p++;
   }
+  opt->specifier = *--p;
   if (s21_is_delim(*p, specifier)) {
-    p++;
     res++;
   } else {
     res = 0;
@@ -210,18 +195,14 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
     while (*format) {
       if (*format != '%') {
         *p = *format;
+        printf("*format: %c\n", *format);
         p++;
         res++;
       } else {
         format++;
         s21_sprintf_opt opt;
         int step = s21_sprintf_opt_parse(&opt, format, args);
-        if (!step) {
-          flag = 1;
-          break;
-        }
-        format += step;
-        res += s21_sprinter(p, *format, args, opt);
+        format += step - 1;  // -1 т.к. в конце цикла format++
 
         printf("opt width: %d\n", opt.width);
         printf("opt precision: %d\n", opt.precision);
@@ -233,7 +214,8 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
         printf("opt fl_space: %d\n", opt.fl_space);
         printf("opt fl_hash: %d\n", opt.fl_hash);
         printf("opt fl_zero: %d\n", opt.fl_zero);
-        printf("specif: %c\n", *format);
+        printf("opt specifier: %c\n", opt.specifier);
+        // printf("*format: %c\n", *format);
       }
       if (flag) break;
       format++;
@@ -254,7 +236,7 @@ int s21_sprintf(char *str, const char *format, ...) {
 
 int main() {
   char str[100];
-  s21_sprintf(str, "vv 99 % *.7ld 66", 55, 123);
+  s21_sprintf(str, "vv 99 % *.7li6", 55, 123);
 
   return 0;
 }

@@ -121,13 +121,17 @@ int s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args) {
 
 int s21_sprinter_char(char *dest, s21_sprintf_opt opt, int c) {
   int res = 0;
+  char sym = c;
+  if (opt.len_l == 1) {
+    return 0;
+  }
   if (opt.width < 2) {
-    *dest = c;
+    *dest = sym;
     dest++;
     res++;
   } else {
     if (opt.fl_minus == 1) {
-      *dest = c;
+      *dest = sym;
       dest++;
       res++;
       for (int i = 1; i < opt.width; i++) {
@@ -141,7 +145,7 @@ int s21_sprinter_char(char *dest, s21_sprintf_opt opt, int c) {
         dest++;
         res++;
       }
-      *dest = c;
+      *dest = sym;
       dest++;
       res++;
     }

@@ -29,8 +29,27 @@ s21_size_t s21_strspn(const char *str1, const char *str2);
 char *s21_strstr(char *str, char *substr);
 char *s21_strtok(char *str, const char *delim);
 
-/*************************/
 int s21_sprintf(char *str, const char *format, ...);
+
+typedef struct s21_sprintf_opt {
+  int fl_minus;
+  int fl_plus;
+  int fl_space;
+  int fl_hash;
+  int fl_zero;
+  int width;
+  int precision;
+  int len_h;
+  int len_l;
+  int len_L;
+  char spec;
+} s21_sprintf_opt;
+
+/** s21_sprintf helper functions  **/
+int s21_is_digit(char c);
+void s21_sprintf_opt_init(s21_sprintf_opt *opt);
+void s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args);
+int s21_atoi(const char *str);
 
 int s21_is_delim(char c, const char *delim);
 

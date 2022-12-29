@@ -48,8 +48,9 @@ typedef struct s21_sprintf_opt {
 /** s21_sprintf helper functions  **/
 int s21_is_digit(char c);
 void s21_sprintf_opt_init(s21_sprintf_opt *opt);
-void s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args);
+int s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args);
 int s21_atoi(const char *str);
+int s21_sprinter_char(char *dest, s21_sprintf_opt opt, int c);
 
 int s21_is_delim(char c, const char *delim);
 

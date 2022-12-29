@@ -29,14 +29,15 @@ void run_all_testcases() {
 }
 
 int main() {
-  run_all_testcases();
+  // run_all_testcases();
+
+  char dest[100];
+  int spr = sprintf(dest, "str: %-11c S%% %*c", 'a', 3, 'e');
+  printf("    spr = %d, %s\n", spr, dest);
 
   char s21_dest[100];
-  char dest[100];
-  int s21_spr = s21_sprintf(dest, "str = %*c", 3, 'a');
-  int spr = sprintf(dest, "str = %*c", 3, 'a');
-  printf("s21_spr = %d; %s\n", s21_spr, s21_dest);
-  printf("    spr = %d, %s\n", spr, dest);
+  int s21_spr = s21_sprintf(s21_dest, "str: %-11c S%% %*c", 'a', 3, 'e');
+  printf("s21_spr = %d, %s\n", s21_spr, s21_dest);
 
   return 0;
 }

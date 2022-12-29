@@ -1,3 +1,5 @@
+#include <stdarg.h>
+
 #include "../s21_string.h"
 #include "../suitecases.h"
 
@@ -49,6 +51,54 @@ START_TEST(s21_atoi_3) {
 }
 END_TEST
 
+START_TEST(s21_sprinter_char_1) {
+  char *dest = malloc(100);
+  s21_sprintf_opt opt = {0};
+  opt.width = 1;
+  opt.fl_minus = 0;
+  int sc = s21_sprinter_char(dest, opt, 'a');
+  ck_assert_str_eq("a", dest);
+  ck_assert_int_eq(1, sc);
+  free(dest);
+}
+END_TEST
+
+START_TEST(s21_sprinter_char_2) {
+  char *dest = malloc(100);
+  s21_sprintf_opt opt = {0};
+  opt.width = 2;
+  opt.fl_minus = 0;
+  int sc = s21_sprinter_char(dest, opt, 'a');
+  ck_assert_str_eq(" a", dest);
+  ck_assert_int_eq(2, sc);
+  free(dest);
+}
+END_TEST
+
+START_TEST(s21_sprinter_char_3) {
+  char *dest = malloc(100);
+  s21_sprintf_opt opt = {0};
+  opt.width = 2;
+  opt.fl_minus = 1;
+  int sc = s21_sprinter_char(dest, opt, 'a');
+  ck_assert_str_eq("a ", dest);
+  ck_assert_int_eq(2, sc);
+  free(dest);
+}
+END_TEST
+
+START_TEST(s21_sprinter_char_4) {
+  char *dest = malloc(100);
+  s21_sprintf_opt opt = {0};
+  opt.width = 5;
+  opt.fl_minus = 1;
+  int sc = s21_sprinter_char(dest, opt, 'a');
+  ck_assert_str_eq("a    ", dest);
+  ck_assert_int_eq(5, sc);
+  free(dest);
+}
+END_TEST
+
 Suite *suite_s21_sprintf() {
   Suite *s;
   TCase *tc_core;
@@ -66,6 +116,10 @@ Suite *suite_s21_sprintf() {
   tcase_add_test(tc_core, s21_atoi_1);
   tcase_add_test(tc_core, s21_atoi_2);
   tcase_add_test(tc_core, s21_atoi_3);
+  tcase_add_test(tc_core, s21_sprinter_char_1);
+  tcase_add_test(tc_core, s21_sprinter_char_2);
+  tcase_add_test(tc_core, s21_sprinter_char_3);
+  tcase_add_test(tc_core, s21_sprinter_char_4);
 
   suite_add_tcase(s, tc_core);
 

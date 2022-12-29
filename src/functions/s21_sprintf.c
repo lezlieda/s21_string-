@@ -28,8 +28,8 @@ int s21_atoi(const char *str) {  // перевод строки в число >=
   return res;
 }
 
-void s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args) {
-  // const char *start = format;
+int s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args) {
+  int res = 0;
   const char flags[6] = "-+ #0";
   const char length[4] = "hlL";
   const char spesc[17] = "cdieEfgGosuxXpn\%";
@@ -53,12 +53,14 @@ void s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args) {
           break;
       }
       format++;
+      res++;
     }
   }
   if (s21_is_digit(*format) || *format == '*') {
     if (*format == '*') {
       opt->width = va_arg(args, int);
       format++;
+      res++;
     } else {
       char numbuf[16] = "\0";
       int i = 0;
@@ -66,6 +68,7 @@ void s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args) {
         numbuf[i] = *format;
         i++;
         format++;
+        res++;
       }
       numbuf[i] = '\0';
       opt->width = s21_atoi(numbuf);
@@ -73,9 +76,11 @@ void s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args) {
   }
   if (*format == '.') {
     format++;
+    res++;
     if (*format == '*') {
       opt->precision = va_arg(args, int);
       format++;
+      res++;
     } else {
       char numbuf[16] = "\0";
       int i = 0;
@@ -83,6 +88,7 @@ void s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args) {
         numbuf[i] = *format;
         i++;
         format++;
+        res++;
       }
       numbuf[i] = '\0';
       opt->precision = s21_atoi(numbuf);
@@ -101,17 +107,53 @@ void s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args) {
         break;
     }
     format++;
+    res++;
   }
   if (s21_is_delim(*format, spesc)) {
     opt->spec = *format;
     format++;
+    res++;
+  } else {
+    opt->spec = '\0';
   }
+  return res;
+}
+
+int s21_sprinter_char(char *dest, s21_sprintf_opt opt, int c) {
+  int res = 0;
+  if (opt.width < 2) {
+    *dest = c;
+    dest++;
+    res++;
+  } else {
+    if (opt.fl_minus == 1) {
+      *dest = c;
+      dest++;
+      res++;
+      for (int i = 1; i < opt.width; i++) {
+        *dest = ' ';
+        dest++;
+        res++;
+      }
+    } else {
+      for (int i = 1; i < opt.width; i++) {
+        *dest = ' ';
+        dest++;
+        res++;
+      }
+      *dest = c;
+      dest++;
+      res++;
+    }
+  }
+  *dest = '\0';
+  return res;
 }
 
 int s21_vsprintf(char *str, const char *format, va_list args) {
   int res = 0;
+  int step = 0;
   s21_sprintf_opt opt;
-  s21_sprintf_opt_init(&opt);
   while (*format) {
     if (*format != '%') {
       *str = *format;
@@ -121,9 +163,29 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
       continue;
     } else {
       format++;
-      s21_opt_parse(format, &opt, args);
+      if (*format == '%') {
+        *str = '%';
+        str++;
+        format++;
+        res++;
+        continue;
+      }
+      s21_sprintf_opt_init(&opt);
+      step = s21_opt_parse(format, &opt, args) - 1;
+      format += step;
+      switch (opt.spec) {
+        case 'c':
+          step = s21_sprinter_char(str, opt, va_arg(args, int));
+          res += step;
+          str += step;
+          break;
+        default:
+          break;
+      }
     }
+    format++;
   }
+  *str = '\0';
   return res;
 }
 

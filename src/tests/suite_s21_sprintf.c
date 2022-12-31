@@ -1,4 +1,8 @@
+#include <locale.h>
 #include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <wchar.h>
 
 #include "../s21_string.h"
 #include "../suitecases.h"
@@ -99,6 +103,62 @@ START_TEST(s21_sprinter_char_4) {
 }
 END_TEST
 
+START_TEST(s21_sprintf_proc_1) {
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "aa bb %% cc %%%% dd");
+  s21_sprintf(s21_dest, "aa bb %% cc %%%% dd");
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
+START_TEST(s21_sprintf_c_1) {
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "aa bb %3c cc %c dd", 'a', 'b');
+  s21_sprintf(s21_dest, "aa bb %3c cc %c dd", 'a', 'b');
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
+START_TEST(s21_sprintf_c_2) {
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "aa bb %-3c cc %c dd", 'a', 'b');
+  s21_sprintf(s21_dest, "aa bb %-3c cc %c dd", 'a', 'b');
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
+START_TEST(s21_sprintf_c_3) {
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "abc%-*cef", 3, 'D');
+  s21_sprintf(s21_dest, "abc%-*cef", 3, 'D');
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
+START_TEST(s21_sprintf_c_4) {
+  setlocale(LC_ALL, "");
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "abc%-*lcef", 3, L'Ā');
+  s21_sprintf(s21_dest, "abc%-*lcef", 3, L'Ā');
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
+START_TEST(s21_sprintf_c_5) {
+  setlocale(LC_ALL, "");
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "abc%-*lcef", 3, 'q');
+  s21_sprintf(s21_dest, "abc%-*lcef", 3, 'q');
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
 Suite *suite_s21_sprintf() {
   Suite *s;
   TCase *tc_core;
@@ -120,6 +180,12 @@ Suite *suite_s21_sprintf() {
   tcase_add_test(tc_core, s21_sprinter_char_2);
   tcase_add_test(tc_core, s21_sprinter_char_3);
   tcase_add_test(tc_core, s21_sprinter_char_4);
+  tcase_add_test(tc_core, s21_sprintf_proc_1);
+  tcase_add_test(tc_core, s21_sprintf_c_1);
+  tcase_add_test(tc_core, s21_sprintf_c_2);
+  tcase_add_test(tc_core, s21_sprintf_c_3);
+  tcase_add_test(tc_core, s21_sprintf_c_4);
+  tcase_add_test(tc_core, s21_sprintf_c_5);
 
   suite_add_tcase(s, tc_core);
 

@@ -1,5 +1,8 @@
+#include <locale.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <wchar.h>
 
 #include "../s21_string.h"
 
@@ -120,34 +123,72 @@ int s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args) {
 }
 
 int s21_sprinter_char(char *dest, s21_sprintf_opt opt, int c) {
+  setlocale(LC_ALL, "");
   int res = 0;
   char sym = c;
-  if (opt.len_l == 1) {
-    return 0;
-  }
-  if (opt.width < 2) {
-    *dest = sym;
-    dest++;
-    res++;
-  } else {
-    if (opt.fl_minus == 1) {
-      *dest = sym;
-      dest++;
-      res++;
-      for (int i = 1; i < opt.width; i++) {
-        *dest = ' ';
+  if (opt.len_l == 1 && c > 127) {
+    wchar_t wc = c;
+    wchar_t *wstr = &wc;
+    wcstombs(NULL, wstr, 0);
+    char *str = (char *)malloc(sizeof(char) * 3);
+    wcstombs(str, wstr, 3);
+    if (opt.width < 2) {
+      for (int i = 0; i < 2; i++) {
+        *dest = str[i];
         dest++;
         res++;
       }
     } else {
-      for (int i = 1; i < opt.width; i++) {
-        *dest = ' ';
-        dest++;
-        res++;
+      if (opt.fl_minus == 1) {
+        for (int i = 0; i < 2; i++) {
+          *dest = str[i];
+          dest++;
+          res++;
+        }
+        for (int i = 2; i < opt.width; i++) {
+          *dest = ' ';
+          dest++;
+          res++;
+        }
+      } else {
+        for (int i = 2; i < opt.width; i++) {
+          *dest = ' ';
+          dest++;
+          res++;
+        }
+        for (int i = 0; i < 2; i++) {
+          *dest = str[i];
+          dest++;
+          res++;
+        }
       }
+    }
+    if (str) free(str);
+  } else {
+    if (opt.width < 2) {
       *dest = sym;
       dest++;
       res++;
+    } else {
+      if (opt.fl_minus == 1) {
+        *dest = sym;
+        dest++;
+        res++;
+        for (int i = 1; i < opt.width; i++) {
+          *dest = ' ';
+          dest++;
+          res++;
+        }
+      } else {
+        for (int i = 1; i < opt.width; i++) {
+          *dest = ' ';
+          dest++;
+          res++;
+        }
+        *dest = sym;
+        dest++;
+        res++;
+      }
     }
   }
   *dest = '\0';

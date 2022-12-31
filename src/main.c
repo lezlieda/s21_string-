@@ -1,4 +1,6 @@
+#include <locale.h>
 #include <stdlib.h>
+#include <wchar.h>
 
 #include "s21_string.h"
 #include "suitecases.h"
@@ -29,14 +31,19 @@ void run_all_testcases() {
 }
 
 int main() {
-  // run_all_testcases();
+  run_all_testcases();
 
   char dest[100];
-  int spr = sprintf(dest, "str: %-11lc S%% %*c", 'a', 3, 'e');
+  wchar_t s = 256;
+  printf("s = %d\n", s);
+  setlocale(LC_ALL, "");
+
+  printf("s = %lc\n", s);
+  int spr = sprintf(dest, "str: %11lc S%% %*lc", L'ö', 3, s);
   printf("    spr = %d, %s\n", spr, dest);
 
   char s21_dest[100];
-  int s21_spr = s21_sprintf(s21_dest, "str: %-11lc S%% %*c", 'a', 3, 'e');
+  int s21_spr = s21_sprintf(s21_dest, "str: %11lc S%% %*lc", L'ö', 3, s);
   printf("s21_spr = %d, %s\n", s21_spr, s21_dest);
 
   return 0;

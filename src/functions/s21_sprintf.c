@@ -163,7 +163,7 @@ int s21_sprinter_char(char *dest, s21_sprintf_opt opt, int c) {
         }
       }
     }
-    if (str) free(str);
+    free(str);
   } else {
     if (opt.width < 2) {
       *dest = sym;
@@ -195,6 +195,120 @@ int s21_sprinter_char(char *dest, s21_sprintf_opt opt, int c) {
   return res;
 }
 
+void s21_strrev(char *str) {
+  int len = s21_strlen(str);
+  for (int i = 0; i < len / 2; i++) {
+    char tmp = str[i];
+    str[i] = str[len - i - 1];
+    str[len - i - 1] = tmp;
+  }
+}
+
+int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
+  int res = 0;
+  char str[64] = "\0";
+  char *strptr = str;
+  int len = 0;
+  int sign = 0;
+  long long int num = c;
+  if (opt.len_h == 1) {
+    num = (short int)c;
+  } else if (opt.len_l == 1) {
+    num = (long int)c;
+  } else if (opt.len_L == 1) {
+    num = (long long int)c;
+  } else {
+    num = (int)c;
+  }
+  if (num < 0) {
+    sign = 1;
+    num = -num;
+  }
+  if (num == 0) {
+    str[0] = '0';
+    str[1] = '\0';
+    len = 1;
+  } else {
+    while (num > 0) {
+      *strptr = num % 10 + '0';
+      strptr++;
+      num /= 10;
+      len++;
+    }
+    *strptr = '\0';
+    s21_strrev(str);
+  }
+  if (opt.precision > len) {
+    for (int i = 0; i < opt.precision - len; i++) {
+      *dest = '0';
+      dest++;
+      res++;
+    }
+    for (int i = 0; i < len; i++) {
+      *dest = str[i];
+      dest++;
+      res++;
+    }
+  } else {
+    if (opt.fl_zero == 1 && opt.fl_minus == 0) {
+      if (sign == 1) {
+        *dest = '-';
+        dest++;
+        res++;
+        sign = 0;
+      }
+      for (int i = 0; i < opt.width - len - sign; i++) {
+        *dest = '0';
+        dest++;
+        res++;
+      }
+      for (int i = 0; i < len; i++) {
+        *dest = str[i];
+        dest++;
+        res++;
+      }
+    } else {
+      if (opt.fl_minus == 1) {
+        if (sign == 1) {
+          *dest = '-';
+          dest++;
+          res++;
+          sign = 0;
+        }
+        for (int i = 0; i < len; i++) {
+          *dest = str[i];
+          dest++;
+          res++;
+        }
+        for (int i = 0; i < opt.width - len - sign; i++) {
+          *dest = ' ';
+          dest++;
+          res++;
+        }
+      } else {
+        for (int i = 0; i < opt.width - len - sign; i++) {
+          *dest = ' ';
+          dest++;
+          res++;
+        }
+        if (sign == 1) {
+          *dest = '-';
+          dest++;
+          res++;
+          sign = 0;
+        }
+        for (int i = 0; i < len; i++) {
+          *dest = str[i];
+          dest++;
+          res++;
+        }
+      }
+    }
+  }
+
+  return res;
+}
+
 int s21_vsprintf(char *str, const char *format, va_list args) {
   int res = 0;
   int step = 0;
@@ -221,6 +335,12 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
       switch (opt.spec) {
         case 'c':
           step = s21_sprinter_char(str, opt, va_arg(args, int));
+          res += step;
+          str += step;
+          break;
+        case 'd':
+        case 'i':
+          step = s21_sprinter_int(str, opt, va_arg(args, long long int));
           res += step;
           str += step;
           break;

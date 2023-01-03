@@ -159,6 +159,174 @@ START_TEST(s21_sprintf_c_5) {
 }
 END_TEST
 
+START_TEST(s21_sprintf_c_6) {
+  setlocale(LC_ALL, "");
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "abc%*lcef", 3, L'Ā');
+  s21_sprintf(s21_dest, "abc%*lcef", 3, L'Ā');
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
+START_TEST(s21_sprintf_c_7) {
+  setlocale(LC_ALL, "");
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "abc%*lcef", 1, 'q');
+  s21_sprintf(s21_dest, "abc%*lcef", 1, 'q');
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
+START_TEST(s21_itoa_1) {
+  char dest[100] = {0};
+  s21_itoa(dest, 123456789, 10);
+  ck_assert_str_eq("123456789", dest);
+}
+END_TEST
+
+START_TEST(s21_itoa_2) {
+  char dest[100] = {0};
+  s21_itoa(dest, -123456789, 10);
+  ck_assert_str_eq("-123456789", dest);
+}
+END_TEST
+
+START_TEST(s21_itoa_3) {
+  char dest[100] = {0};
+  s21_itoa(dest, -123456789, 16);
+  ck_assert_str_eq("-75BCD15", s21_to_upper(dest));
+}
+END_TEST
+
+START_TEST(s21_itoa_4) {
+  char s21_dest[100] = {0};
+  char dest[100] = {0};
+  sprintf(dest, "%x", 123456789);
+  s21_itoa(s21_dest, 123456789, 16);
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
+START_TEST(s21_itoa_5) {
+  char dest[100] = {0};
+  s21_itoa(dest, 123456789, 8);
+  ck_assert_str_eq("726746425", dest);
+}
+END_TEST
+
+START_TEST(s21_itoa_6) {
+  char dest[100] = {0};
+  s21_itoa(dest, -123456789, 8);
+  ck_assert_str_eq("-726746425", dest);
+}
+END_TEST
+
+START_TEST(s21_itoa_7) {
+  char dest[100] = {0};
+  s21_itoa(dest, 123456789, 2);
+  ck_assert_str_eq("111010110111100110100010101", dest);
+}
+END_TEST
+
+START_TEST(s21_itoa_8) {
+  char dest[100] = {0};
+  s21_itoa(dest, -123456789, 2);
+  ck_assert_str_eq("-111010110111100110100010101", dest);
+}
+END_TEST
+
+START_TEST(s21_sprintf_d_1) {
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "aa bb %3d cc %d dd", 123, 456);
+  s21_sprintf(s21_dest, "aa bb %3d cc %d dd", 123, 456);
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
+START_TEST(s21_sprintf_d_2) {
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "aa bb %-3d cc %d dd", 123, 456);
+  s21_sprintf(s21_dest, "aa bb %-3d cc %d dd", 123, 456);
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
+START_TEST(s21_sprintf_d_3) {
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "aa bb %03d cc %d dd", 123, 456);
+  s21_sprintf(s21_dest, "aa bb %03d cc %d dd", 123, 456);
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
+START_TEST(s21_sprintf_d_4) {
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "aa bb %*d cc %d dd", 3, 123, 456);
+  s21_sprintf(s21_dest, "aa bb %*d cc %d dd", 3, 123, 456);
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
+START_TEST(s21_sprintf_d_5) {
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "aa bb %*d cc %d dd", -3, 123, 456);
+  s21_sprintf(s21_dest, "aa bb %*d cc %d dd", -3, 123, 456);
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
+START_TEST(s21_sprintf_d_6) {
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "aa bb %*d cc %d dd", 3, -123, 456);
+  s21_sprintf(s21_dest, "aa bb %*d cc %d dd", 3, -123, 456);
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
+START_TEST(s21_sprintf_d_7) {
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "aa bb %*.*d cc %d dd", 10, 5, -123, 456);
+  s21_sprintf(s21_dest, "aa bb %*.*d cc %d dd", 10, 5, -123, 456);
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
+START_TEST(s21_sprintf_d_8) {
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "aa bb %+-*.*d cc %+d dd", 10, 5, 123, 456);
+  s21_sprintf(s21_dest, "aa bb %+-*.*d cc %+d dd", 10, 5, 123, 456);
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
+START_TEST(s21_sprintf_d_9) {
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "aa bb %+-*.*d cc % d dd", 10, 5, -123, 456);
+  s21_sprintf(s21_dest, "aa bb %+-*.*d cc % d dd", 10, 5, -123, 456);
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
+START_TEST(s21_sprintf_d_10) {
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "aa bb %+-*.5d cc % d dd", 10, 123, 456);
+  s21_sprintf(s21_dest, "aa bb %+-*.5d cc % d dd", 10, 123, 456);
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
 Suite *suite_s21_sprintf() {
   Suite *s;
   TCase *tc_core;
@@ -173,19 +341,45 @@ Suite *suite_s21_sprintf() {
   tcase_add_test(tc_core, s21_isdigit_3);
   tcase_add_test(tc_core, s21_isdigit_4);
   tcase_add_test(tc_core, s21_isdigit_5);
+
   tcase_add_test(tc_core, s21_atoi_1);
   tcase_add_test(tc_core, s21_atoi_2);
   tcase_add_test(tc_core, s21_atoi_3);
+
   tcase_add_test(tc_core, s21_sprinter_char_1);
   tcase_add_test(tc_core, s21_sprinter_char_2);
   tcase_add_test(tc_core, s21_sprinter_char_3);
   tcase_add_test(tc_core, s21_sprinter_char_4);
+
   tcase_add_test(tc_core, s21_sprintf_proc_1);
+
   tcase_add_test(tc_core, s21_sprintf_c_1);
   tcase_add_test(tc_core, s21_sprintf_c_2);
   tcase_add_test(tc_core, s21_sprintf_c_3);
   tcase_add_test(tc_core, s21_sprintf_c_4);
   tcase_add_test(tc_core, s21_sprintf_c_5);
+  tcase_add_test(tc_core, s21_sprintf_c_6);
+  tcase_add_test(tc_core, s21_sprintf_c_7);
+
+  tcase_add_test(tc_core, s21_itoa_1);
+  tcase_add_test(tc_core, s21_itoa_2);
+  tcase_add_test(tc_core, s21_itoa_3);
+  tcase_add_test(tc_core, s21_itoa_4);
+  tcase_add_test(tc_core, s21_itoa_5);
+  tcase_add_test(tc_core, s21_itoa_6);
+  tcase_add_test(tc_core, s21_itoa_7);
+  tcase_add_test(tc_core, s21_itoa_8);
+
+  tcase_add_test(tc_core, s21_sprintf_d_1);
+  tcase_add_test(tc_core, s21_sprintf_d_2);
+  tcase_add_test(tc_core, s21_sprintf_d_3);
+  tcase_add_test(tc_core, s21_sprintf_d_4);
+  tcase_add_test(tc_core, s21_sprintf_d_5);
+  tcase_add_test(tc_core, s21_sprintf_d_6);
+  tcase_add_test(tc_core, s21_sprintf_d_7);
+  tcase_add_test(tc_core, s21_sprintf_d_8);
+  tcase_add_test(tc_core, s21_sprintf_d_9);
+  tcase_add_test(tc_core, s21_sprintf_d_10);
 
   suite_add_tcase(s, tc_core);
 

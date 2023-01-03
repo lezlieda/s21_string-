@@ -31,6 +31,39 @@ int s21_atoi(const char *str) {  // перевод строки в число >=
   return res;
 }
 
+void s21_strrev(char *str) {
+  int len = s21_strlen(str);
+  for (int i = 0; i < len / 2; i++) {
+    char tmp = str[i];
+    str[i] = str[len - i - 1];
+    str[len - i - 1] = tmp;
+  }
+}
+
+int s21_itoa(char *dest, long long int num, int base) {
+  int i = 0;
+  int sign = 0;
+  if (num < 0) {
+    sign = 1;
+    num = -num;
+  }
+  do {
+    long long rem = num % base;
+    dest[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+  } while (num /= base);
+  if (sign) {
+    dest[i++] = '-';
+  }
+  dest[i] = '\0';
+  s21_strrev(dest);
+  return i;
+}
+
+void s21_putch(char **dest, char c) {
+  **dest = c;
+  (*dest)++;
+}
+
 int s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args) {
   int res = 0;
   const char flags[6] = "-+ #0";
@@ -132,35 +165,27 @@ int s21_sprinter_char(char *dest, s21_sprintf_opt opt, int c) {
     wcstombs(NULL, wstr, 0);
     char *str = (char *)malloc(sizeof(char) * 3);
     wcstombs(str, wstr, 3);
-    if (opt.width < 2) {
+    if (opt.fl_minus == 1) {
       for (int i = 0; i < 2; i++) {
         *dest = str[i];
         dest++;
         res++;
       }
+      for (int i = 2; i < opt.width; i++) {
+        *dest = ' ';
+        dest++;
+        res++;
+      }
     } else {
-      if (opt.fl_minus == 1) {
-        for (int i = 0; i < 2; i++) {
-          *dest = str[i];
-          dest++;
-          res++;
-        }
-        for (int i = 2; i < opt.width; i++) {
-          *dest = ' ';
-          dest++;
-          res++;
-        }
-      } else {
-        for (int i = 2; i < opt.width; i++) {
-          *dest = ' ';
-          dest++;
-          res++;
-        }
-        for (int i = 0; i < 2; i++) {
-          *dest = str[i];
-          dest++;
-          res++;
-        }
+      for (int i = 2; i < opt.width; i++) {
+        *dest = ' ';
+        dest++;
+        res++;
+      }
+      for (int i = 0; i < 2; i++) {
+        *dest = str[i];
+        dest++;
+        res++;
       }
     }
     free(str);
@@ -195,23 +220,14 @@ int s21_sprinter_char(char *dest, s21_sprintf_opt opt, int c) {
   return res;
 }
 
-void s21_strrev(char *str) {
-  int len = s21_strlen(str);
-  for (int i = 0; i < len / 2; i++) {
-    char tmp = str[i];
-    str[i] = str[len - i - 1];
-    str[len - i - 1] = tmp;
-  }
-}
-
 int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
   int res = 0;
   char str[64] = "\0";
   char *strptr = str;
   int len = 0;
   int sign = 0;
-  long long int num = c;
-  if (opt.len_h == 1) {
+  long long int num = 0;
+  if (opt.len_h == 1) {  // устанавливаем длину int в зависимости от флага
     num = (short int)c;
   } else if (opt.len_l == 1) {
     num = (long int)c;
@@ -220,92 +236,67 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
   } else {
     num = (int)c;
   }
-  if (num < 0) {
-    sign = 1;
-    num = -num;
+  if (num < 0) sign = 1;
+  len = s21_itoa(strptr, num, 10);  // формируем строку в str
+  if (opt.fl_plus == 1 &&
+      num >= 0) {  // если есть флаг +, вставляем его в начало
+    char *tmp = s21_insert(str, "+", 0);
+    s21_strcpy(str, tmp);
+    free(tmp);
+    len++;
   }
-  if (num == 0) {
-    str[0] = '0';
-    str[1] = '\0';
-    len = 1;
-  } else {
-    while (num > 0) {
-      *strptr = num % 10 + '0';
-      strptr++;
-      num /= 10;
-      len++;
-    }
-    *strptr = '\0';
-    s21_strrev(str);
+  if (opt.fl_space == 1 &&
+      num >= 0) {  // если есть флаг пробела, вставляем его в начало
+    char *tmp = s21_insert(str, " ", 0);
+    s21_strcpy(str, tmp);
+    free(tmp);
+    len++;
   }
   if (opt.precision > len) {
-    for (int i = 0; i < opt.precision - len; i++) {
-      *dest = '0';
-      dest++;
-      res++;
-    }
-    for (int i = 0; i < len; i++) {
-      *dest = str[i];
-      dest++;
-      res++;
-    }
-  } else {
-    if (opt.fl_zero == 1 && opt.fl_minus == 0) {
-      if (sign == 1) {
-        *dest = '-';
-        dest++;
-        res++;
-        sign = 0;
-      }
-      for (int i = 0; i < opt.width - len - sign; i++) {
-        *dest = '0';
-        dest++;
-        res++;
-      }
-      for (int i = 0; i < len; i++) {
-        *dest = str[i];
-        dest++;
-        res++;
-      }
-    } else {
-      if (opt.fl_minus == 1) {
-        if (sign == 1) {
-          *dest = '-';
-          dest++;
-          res++;
-          sign = 0;
-        }
-        for (int i = 0; i < len; i++) {
-          *dest = str[i];
-          dest++;
-          res++;
-        }
-        for (int i = 0; i < opt.width - len - sign; i++) {
-          *dest = ' ';
-          dest++;
-          res++;
-        }
+    int op = (sign || opt.fl_plus == 1) ? opt.precision - len + 1
+                                        : opt.precision - len;
+    while (op-- > 0) {
+      if (sign || opt.fl_plus == 1) {
+        char *tmp = s21_insert(str, "0", 1);
+        s21_strcpy(str, tmp);
+        free(tmp);
       } else {
-        for (int i = 0; i < opt.width - len - sign; i++) {
-          *dest = ' ';
-          dest++;
-          res++;
-        }
-        if (sign == 1) {
-          *dest = '-';
-          dest++;
-          res++;
-          sign = 0;
-        }
-        for (int i = 0; i < len; i++) {
-          *dest = str[i];
-          dest++;
-          res++;
-        }
+        char *tmp = s21_insert(str, "0", 0);
+        s21_strcpy(str, tmp);
+        free(tmp);
       }
+      len++;
     }
   }
-
+  if (opt.width > len) {
+    int ow = opt.width - len;
+    while (ow-- > 0) {
+      if (opt.fl_minus == 1) {
+        char *tmp = s21_insert(str, " ", len);
+        s21_strcpy(str, tmp);
+        free(tmp);
+      } else {
+        if (opt.fl_zero == 1) {
+          if (sign || opt.fl_plus == 1 || opt.fl_space == 1) {
+            char *tmp = s21_insert(str, "0", 1);
+            s21_strcpy(str, tmp);
+            free(tmp);
+          } else {
+            char *tmp = s21_insert(str, "0", 0);
+            s21_strcpy(str, tmp);
+            free(tmp);
+          }
+        } else {
+          char *tmp = s21_insert(str, " ", 0);
+          s21_strcpy(str, tmp);
+          free(tmp);
+        }
+      }
+      len++;
+    }
+  }
+  s21_strcpy(dest, str);
+  res = len;
   return res;
 }
 

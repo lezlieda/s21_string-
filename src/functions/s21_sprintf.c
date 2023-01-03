@@ -167,51 +167,42 @@ int s21_sprinter_char(char *dest, s21_sprintf_opt opt, int c) {
     wcstombs(str, wstr, 3);
     if (opt.fl_minus == 1) {
       for (int i = 0; i < 2; i++) {
-        *dest = str[i];
-        dest++;
+        s21_putch(&dest, str[i]);
         res++;
       }
       for (int i = 2; i < opt.width; i++) {
-        *dest = ' ';
-        dest++;
+        s21_putch(&dest, ' ');
         res++;
       }
     } else {
       for (int i = 2; i < opt.width; i++) {
-        *dest = ' ';
-        dest++;
+        s21_putch(&dest, ' ');
         res++;
       }
       for (int i = 0; i < 2; i++) {
-        *dest = str[i];
-        dest++;
+        s21_putch(&dest, str[i]);
         res++;
       }
     }
     free(str);
   } else {
     if (opt.width < 2) {
-      *dest = sym;
-      dest++;
+      s21_putch(&dest, sym);
       res++;
     } else {
       if (opt.fl_minus == 1) {
-        *dest = sym;
-        dest++;
+        s21_putch(&dest, sym);
         res++;
         for (int i = 1; i < opt.width; i++) {
-          *dest = ' ';
-          dest++;
+          s21_putch(&dest, ' ');
           res++;
         }
       } else {
         for (int i = 1; i < opt.width; i++) {
-          *dest = ' ';
-          dest++;
+          s21_putch(&dest, ' ');
           res++;
         }
-        *dest = sym;
-        dest++;
+        s21_putch(&dest, sym);
         res++;
       }
     }
@@ -300,6 +291,58 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
   return res;
 }
 
+int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
+                      unsigned long long int c) {
+  int res = 0;
+  char str[64] = "\0";
+  char *strptr = str;
+  int len = 0;
+  unsigned long long int num = 0;
+  if (opt.len_h == 1) {  // устанавливаем длину int в зависимости от флага
+    num = (unsigned short int)c;
+  } else if (opt.len_l == 1) {
+    num = (unsigned long int)c;
+  } else if (opt.len_L == 1) {
+    num = (unsigned long long int)c;
+  } else {
+    num = (unsigned int)c;
+  }
+  len = s21_itoa(strptr, num, 10);  // формируем строку в str
+  if (opt.precision > len) {
+    int op = opt.precision - len;
+    while (op-- > 0) {
+      char *tmp = s21_insert(str, "0", 0);
+      s21_strcpy(str, tmp);
+      free(tmp);
+      len++;
+    }
+  }
+  if (opt.width > len) {
+    int ow = opt.width - len;
+    while (ow-- > 0) {
+      if (opt.fl_minus == 1) {
+        char *tmp = s21_insert(str, " ", len);
+        s21_strcpy(str, tmp);
+        free(tmp);
+      } else {
+        if (opt.fl_zero == 1) {
+          char *tmp = s21_insert(str, "0", 0);
+          s21_strcpy(str, tmp);
+          free(tmp);
+        } else {
+          char *tmp = s21_insert(str, " ", 0);
+          s21_strcpy(str, tmp);
+          free(tmp);
+        }
+      }
+      len++;
+    }
+  }
+  s21_strcpy(dest, str);
+  res = len;
+  return res;
+}
+
 int s21_vsprintf(char *str, const char *format, va_list args) {
   int res = 0;
   int step = 0;
@@ -332,6 +375,12 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
         case 'd':
         case 'i':
           step = s21_sprinter_int(str, opt, va_arg(args, long long int));
+          res += step;
+          str += step;
+          break;
+        case 'u':
+          step =
+              s21_sprinter_uint(str, opt, va_arg(args, unsigned long long int));
           res += step;
           str += step;
           break;

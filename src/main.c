@@ -37,11 +37,11 @@ int main() {
 
   // setlocale(LC_ALL, "");
 
-  // int spr = sprintf(dest, "str:%-+*.*d", 14, 7, 123);
+  // int spr = sprintf(dest, "str:%-*.*u", 14, 7, 123);
   // printf("    spr = %d, %s\n", spr, dest);
 
   // char s21_dest[100];
-  // int s21_spr = s21_sprintf(s21_dest, "str:%-+*.*d", 14, 7, 123);
+  // int s21_spr = s21_sprintf(s21_dest, "str:%-*.*u", 14, 7, 123);
   // printf("s21_spr = %d, %s\n", s21_spr, s21_dest);
 
   return 0;

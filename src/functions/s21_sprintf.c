@@ -372,6 +372,98 @@ int s21_sprinter_str(char *dest, s21_sprintf_opt opt, char *c) {
   return res;
 }
 
+long double s21_pow(long double num, int pow) {  // возведение в степень int > 0
+  long double res = 1;
+  while (pow-- > 0) {
+    res *= num;
+  }
+  return res;
+}
+
+int s21_ftoa(char *dest, long double num, int precision) {
+  int sign = 0;
+  int len = 0;
+  if (num < 0) {
+    sign = 1;
+    num = -num;
+  }
+  int whole = (int)num;
+  len = s21_itoa(dest, whole, 10);
+  if (precision > 16) {
+    long double frac = num - whole;
+    if (precision > 0) {
+      dest[len] = '.';
+      len++;
+      while (precision-- > 0) {
+        frac *= 10;
+        int f = (int)frac;
+        dest[len] = f + '0';
+        len++;
+        frac -= f;
+      }
+    }
+  } else {
+    int pr = (precision > 0) ? (int)s21_pow(precision, 10) : 1000000;
+    int frac = (int)num * pr % pr;
+    if (precision > 0) {
+      dest[len] = '.';
+      len++;
+      len += s21_itoa((dest + len), frac, 10);
+    }
+  }
+  if (sign == 1) {
+    char *tmp = s21_insert(dest, "-", 0);
+    s21_strcpy(dest, tmp);
+    free(tmp);
+    len++;
+  }
+  return len;
+}
+
+int s21_sprinter_float(char *dest, s21_sprintf_opt opt, long double c) {
+  char str[1024] = "\0";
+  char *strptr = str;
+  int len = 0;
+  // int sign = 0;
+  // if (c < 0) {
+  //   sign = 1;
+  //   c = -c;
+  // }
+  long double num = 0;
+  if (opt.len_L == 1) {
+    num = (long double)c;
+  } else {
+    num = (double)c;
+  }
+  if (opt.precision == -1) opt.precision = 6;
+
+  len = s21_ftoa(strptr, num, opt.precision);
+
+  if (opt.width > len) {
+    int ow = opt.width - len;
+    while (ow-- > 0) {
+      if (opt.fl_minus == 1) {
+        char *tmp = s21_insert(str, " ", len);
+        s21_strcpy(str, tmp);
+        free(tmp);
+      } else {
+        if (opt.fl_zero == 1) {
+          char *tmp = s21_insert(str, "0", 0);
+          s21_strcpy(str, tmp);
+          free(tmp);
+        } else {
+          char *tmp = s21_insert(str, " ", 0);
+          s21_strcpy(str, tmp);
+          free(tmp);
+        }
+      }
+      len++;
+    }
+  }
+  s21_strcpy(dest, str);
+  return len;
+}
+
 int s21_vsprintf(char *str, const char *format, va_list args) {
   int res = 0;
   int step = 0;
@@ -415,6 +507,11 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
           break;
         case 's':
           step = s21_sprinter_str(str, opt, va_arg(args, char *));
+          res += step;
+          str += step;
+          break;
+        case 'f':
+          step = s21_sprinter_float(str, opt, va_arg(args, double));
           res += step;
           str += step;
           break;

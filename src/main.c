@@ -31,18 +31,18 @@ void run_all_testcases() {
 }
 
 int main() {
-  // run_all_testcases();
+  run_all_testcases();
 
-  char dest[100];
+  // char dest[100];
 
-  setlocale(LC_ALL, "");
-  double d = 123;
-  int spr = sprintf(dest, "str:%+10.16f", d);
-  printf("    spr = %d, %s\n", spr, dest);
+  // setlocale(LC_ALL, "");
+  // double d = 123;
+  // int spr = sprintf(dest, "str:%+10.16f", d);
+  // printf("    spr = %d, %s\n", spr, dest);
 
-  char s21_dest[100];
-  int s21_spr = s21_sprintf(s21_dest, "str:%+10.16f", d);
-  printf("s21_spr = %d, %s\n", s21_spr, s21_dest);
+  // char s21_dest[100];
+  // int s21_spr = s21_sprintf(s21_dest, "str:%+10.16f", d);
+  // printf("s21_spr = %d, %s\n", s21_spr, s21_dest);
 
   return 0;
 }

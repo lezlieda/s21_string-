@@ -222,8 +222,6 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
     num = (short int)c;
   } else if (opt.len_l == 1) {
     num = (long int)c;
-  } else if (opt.len_L == 1) {
-    num = (long long int)c;
   } else {
     num = (int)c;
   }
@@ -343,6 +341,37 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
   return res;
 }
 
+int s21_sprinter_str(char *dest, s21_sprintf_opt opt, char *c) {
+  int res = 0;
+  char str[8196] = "\0";
+  // char *strptr = str;
+  int len = 0;
+  len = s21_strlen(c);
+  if (opt.precision < len && opt.precision != -1) {  // если точность меньше
+    len = opt.precision;  // длины строки - обрезаем строку до точности
+  }
+  s21_strncpy(str, c, len);
+  if (opt.width > len) {  // если ширина больше длины строки - добавляем пробелы
+    int ow = opt.width - len;
+    while (ow-- > 0) {
+      if (opt.fl_minus == 1) {
+        char *tmp = s21_insert(str, " ", len);
+        s21_strcpy(str, tmp);
+        free(tmp);
+      } else {
+        char *tmp = s21_insert(str, " ", 0);
+        s21_strcpy(str, tmp);
+        free(tmp);
+      }
+      len++;
+    }
+  }
+  s21_strcpy(dest, str);
+  res = len;
+
+  return res;
+}
+
 int s21_vsprintf(char *str, const char *format, va_list args) {
   int res = 0;
   int step = 0;
@@ -381,6 +410,11 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
         case 'u':
           step =
               s21_sprinter_uint(str, opt, va_arg(args, unsigned long long int));
+          res += step;
+          str += step;
+          break;
+        case 's':
+          step = s21_sprinter_str(str, opt, va_arg(args, char *));
           res += step;
           str += step;
           break;

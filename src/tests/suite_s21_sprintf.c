@@ -530,6 +530,96 @@ START_TEST(s21_sprintf_u_10) {
 }
 END_TEST
 
+START_TEST(s21_sprintf_s_1) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %s cc", "hello world");
+  int s21 = s21_sprintf(s21_dest, "aa bb %s cc", "hello world");
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_s_2) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %15s cc", "hello world");
+  int s21 = s21_sprintf(s21_dest, "aa bb %15s cc", "hello world");
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_s_3) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %-15s cc", "hello world");
+  int s21 = s21_sprintf(s21_dest, "aa bb %-15s cc", "hello world");
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_s_4) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %5s cc", "hello world");
+  int s21 = s21_sprintf(s21_dest, "aa bb %5s cc", "hello world");
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_s_5) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %*s cc", 15, "hello world");
+  int s21 = s21_sprintf(s21_dest, "aa bb %*s cc", 15, "hello world");
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_s_6) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %.*s cc", 5, "hello world");
+  int s21 = s21_sprintf(s21_dest, "aa bb %.*s cc", 5, "hello world");
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_s_7) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %.*s cc", 15, "hello world");
+  int s21 = s21_sprintf(s21_dest, "aa bb %.*s cc", 15, "hello world");
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_s_8) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %*.*s cc", 15, 13, "hello world");
+  int s21 = s21_sprintf(s21_dest, "aa bb %*.*s cc", 15, 13, "hello world");
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_s_9) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %-*.*s cc", 15, 5, "hello world");
+  int s21 = s21_sprintf(s21_dest, "aa bb %-*.*s cc", 15, 5, "hello world");
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
 Suite *suite_s21_sprintf() {
   Suite *s;
   TCase *tc_core;
@@ -603,6 +693,16 @@ Suite *suite_s21_sprintf() {
   tcase_add_test(tc_core, s21_sprintf_u_8);
   tcase_add_test(tc_core, s21_sprintf_u_9);
   tcase_add_test(tc_core, s21_sprintf_u_10);
+
+  tcase_add_test(tc_core, s21_sprintf_s_1);
+  tcase_add_test(tc_core, s21_sprintf_s_2);
+  tcase_add_test(tc_core, s21_sprintf_s_3);
+  tcase_add_test(tc_core, s21_sprintf_s_4);
+  tcase_add_test(tc_core, s21_sprintf_s_5);
+  tcase_add_test(tc_core, s21_sprintf_s_6);
+  tcase_add_test(tc_core, s21_sprintf_s_7);
+  tcase_add_test(tc_core, s21_sprintf_s_8);
+  tcase_add_test(tc_core, s21_sprintf_s_9);
 
   suite_add_tcase(s, tc_core);
 

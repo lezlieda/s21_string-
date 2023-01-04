@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "suitecases.h": "c"
+        "suitecases.h": "c",
+        "s21_string.h": "c"
     }
 }

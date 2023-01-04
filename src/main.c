@@ -1,7 +1,3 @@
-#include <locale.h>
-#include <stdlib.h>
-#include <wchar.h>
-
 #include "s21_string.h"
 #include "suitecases.h"
 

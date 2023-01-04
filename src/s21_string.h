@@ -1,8 +1,11 @@
 #ifndef S21_STRING_H
 #define S21_STRING_H
 
+#include <locale.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <wchar.h>
 
 #define S21_NULL ((void *)0)
 

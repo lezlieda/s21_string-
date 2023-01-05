@@ -8,5 +8,6 @@ src/*.gcov
 src/*.html
 src/*.css
 src/a.out
+src/a.c
 src/copy a
 src/functions/copy

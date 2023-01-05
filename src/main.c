@@ -27,18 +27,15 @@ void run_all_testcases() {
 }
 
 int main() {
-  run_all_testcases();
+  // run_all_testcases();
 
-  // char dest[100];
-
-  // setlocale(LC_ALL, "");
-  // double d = 123;
-  // int spr = sprintf(dest, "str:%+10.16f", d);
-  // printf("    spr = %d, %s\n", spr, dest);
-
-  // char s21_dest[100];
-  // int s21_spr = s21_sprintf(s21_dest, "str:%+10.16f", d);
-  // printf("s21_spr = %d, %s\n", s21_spr, s21_dest);
+  long double d = -1234567.890123456123456L;
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "%.25Lf", d);
+  s21_ftoa(s21_dest, d, 25);
+  printf(" sprintf: %s\n", dest);
+  printf("s21_ftoa: %s\n", s21_dest);
 
   return 0;
 }

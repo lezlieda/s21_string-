@@ -620,6 +620,16 @@ START_TEST(s21_sprintf_s_9) {
 }
 END_TEST
 
+START_TEST(s21_ftoa_1) {
+  double d = 123.456;
+  char dest[100];
+  char s21_dest[100];
+  sprintf(dest, "%f", d);
+  s21_ftoa(s21_dest, d, 6);
+  ck_assert_str_eq(dest, s21_dest);
+}
+END_TEST
+
 Suite *suite_s21_sprintf() {
   Suite *s;
   TCase *tc_core;
@@ -703,6 +713,8 @@ Suite *suite_s21_sprintf() {
   tcase_add_test(tc_core, s21_sprintf_s_7);
   tcase_add_test(tc_core, s21_sprintf_s_8);
   tcase_add_test(tc_core, s21_sprintf_s_9);
+
+  tcase_add_test(tc_core, s21_ftoa_1);
 
   suite_add_tcase(s, tc_core);
 

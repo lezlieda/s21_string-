@@ -372,10 +372,10 @@ int s21_sprinter_str(char *dest, s21_sprintf_opt opt, char *c) {
   return res;
 }
 
-long double s21_pow(long double num, int pow) {  // возведение в степень int > 0
+long double s21_pow(int a, int b) {
   long double res = 1;
-  while (pow-- > 0) {
-    res *= num;
+  while (b-- > 0) {
+    res *= a;
   }
   return res;
 }
@@ -383,45 +383,53 @@ long double s21_pow(long double num, int pow) {  // возведение в ст
 int s21_ftoa(char *dest, long double num, int precision) {
   int sign = 0;
   int len = 0;
+  char str[64] = "\0";
+  int i = 0;
   if (num < 0) {
     sign = 1;
     num = -num;
   }
-  int whole = (int)num;
-  len = s21_itoa(dest, whole, 10);
-  if (precision > 16) {
-    long double frac = num - whole;
-    if (precision > 0) {
-      dest[len] = '.';
+  int range = 0;
+  long double tmp = num;
+  while (tmp >= 1) {
+    tmp /= 10;
+    range++;
+  }
+  tmp = num;
+  if (range == 0) range = 1;
+  while (range-- > 0) {
+    char sym[2] = "\0";
+    long double c = tmp / s21_pow(10, range);
+    s21_itoa(sym, (int)c, 10);
+    str[i++] = sym[0];
+    len++;
+    tmp -= (int)c * s21_pow(10, range);
+  }
+  if (precision > 0) {
+    str[i++] = '.';
+    len++;
+    while (precision-- > 0) {
+      long double c = tmp * 10;
+      char sym[2] = "\0";
+      s21_itoa(sym, (int)c, 10);
+      str[i++] = sym[0];
       len++;
-      while (precision-- > 0) {
-        frac *= 10;
-        int f = (int)frac;
-        dest[len] = f + '0';
-        len++;
-        frac -= f;
-      }
-    }
-  } else {
-    int pr = (precision > 0) ? (int)s21_pow(precision, 10) : 1000000;
-    int frac = (int)num * pr % pr;
-    if (precision > 0) {
-      dest[len] = '.';
-      len++;
-      len += s21_itoa((dest + len), frac, 10);
+      tmp = c - (int)c;
     }
   }
   if (sign == 1) {
-    char *tmp = s21_insert(dest, "-", 0);
-    s21_strcpy(dest, tmp);
+    char *tmp = s21_insert(str, "-", 0);
+    s21_strcpy(str, tmp);
     free(tmp);
     len++;
   }
+  s21_strcpy(dest, str);
+
   return len;
 }
 
 int s21_sprinter_float(char *dest, s21_sprintf_opt opt, long double c) {
-  char str[1024] = "\0";
+  char str[128] = "\0";
   char *strptr = str;
   int len = 0;
   // int sign = 0;

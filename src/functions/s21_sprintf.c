@@ -224,14 +224,14 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
   if (opt.fl_plus == 1 &&
       num >= 0) {  // если есть флаг +, вставляем его в начало
     char *tmp = s21_insert(str, "+", 0);
-    s21_strcpy(str, tmp);
+    s21_strncpy(str, tmp, len + 1);
     free(tmp);
     len++;
   }
   if (opt.fl_space == 1 &&
       num >= 0) {  // если есть флаг пробела, вставляем его в начало
     char *tmp = s21_insert(str, " ", 0);
-    s21_strcpy(str, tmp);
+    s21_strncpy(str, tmp, len + 1);
     free(tmp);
     len++;
   }
@@ -241,11 +241,11 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
     while (op-- > 0) {
       if (sign || opt.fl_plus == 1) {
         char *tmp = s21_insert(str, "0", 1);
-        s21_strcpy(str, tmp);
+        s21_strncpy(str, tmp, len + 1);
         free(tmp);
       } else {
         char *tmp = s21_insert(str, "0", 0);
-        s21_strcpy(str, tmp);
+        s21_strncpy(str, tmp, len + 1);
         free(tmp);
       }
       len++;
@@ -256,29 +256,29 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
     while (ow-- > 0) {
       if (opt.fl_minus == 1) {
         char *tmp = s21_insert(str, " ", len);
-        s21_strcpy(str, tmp);
+        s21_strncpy(str, tmp, len + 1);
         free(tmp);
       } else {
         if (opt.fl_zero == 1) {
           if (sign || opt.fl_plus == 1 || opt.fl_space == 1) {
             char *tmp = s21_insert(str, "0", 1);
-            s21_strcpy(str, tmp);
+            s21_strncpy(str, tmp, len + 1);
             free(tmp);
           } else {
             char *tmp = s21_insert(str, "0", 0);
-            s21_strcpy(str, tmp);
+            s21_strncpy(str, tmp, len + 1);
             free(tmp);
           }
         } else {
           char *tmp = s21_insert(str, " ", 0);
-          s21_strcpy(str, tmp);
+          s21_strncpy(str, tmp, len + 1);
           free(tmp);
         }
       }
       len++;
     }
   }
-  s21_strcpy(dest, str);
+  s21_strncpy(dest, str, len);
   res = len;
   return res;
 }
@@ -304,7 +304,7 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
     int op = opt.precision - len;
     while (op-- > 0) {
       char *tmp = s21_insert(str, "0", 0);
-      s21_strcpy(str, tmp);
+      s21_strncpy(str, tmp, len + 1);
       free(tmp);
       len++;
     }
@@ -314,23 +314,23 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
     while (ow-- > 0) {
       if (opt.fl_minus == 1) {
         char *tmp = s21_insert(str, " ", len);
-        s21_strcpy(str, tmp);
+        s21_strncpy(str, tmp, len + 1);
         free(tmp);
       } else {
         if (opt.fl_zero == 1) {
           char *tmp = s21_insert(str, "0", 0);
-          s21_strcpy(str, tmp);
+          s21_strncpy(str, tmp, len + 1);
           free(tmp);
         } else {
           char *tmp = s21_insert(str, " ", 0);
-          s21_strcpy(str, tmp);
+          s21_strncpy(str, tmp, len + 1);
           free(tmp);
         }
       }
       len++;
     }
   }
-  s21_strcpy(dest, str);
+  s21_strncpy(dest, str, len);
   res = len;
   return res;
 }
@@ -350,17 +350,17 @@ int s21_sprinter_str(char *dest, s21_sprintf_opt opt, char *c) {
     while (ow-- > 0) {
       if (opt.fl_minus == 1) {
         char *tmp = s21_insert(str, " ", len);
-        s21_strcpy(str, tmp);
+        s21_strncpy(str, tmp, len + 1);
         free(tmp);
       } else {
         char *tmp = s21_insert(str, " ", 0);
-        s21_strcpy(str, tmp);
+        s21_strncpy(str, tmp, len + 1);
         free(tmp);
       }
       len++;
     }
   }
-  s21_strcpy(dest, str);
+  s21_strncpy(dest, str, len);
   res = len;
 
   return res;
@@ -398,7 +398,9 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
     num = -num;
   }
   long double tmp = num;
-
+  /***
+   * записываем в строку целую часть
+   */
   if (flag == 1) {
     s21_strncpy(str, "nan", 3);
     len = 3;
@@ -428,7 +430,9 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
       tmp -= (long long int)c * s21_pow(10, range);
     }
   }
-
+  /****
+   * записываем в строку дробную часть
+   */
   if (opt.precision > 0 || opt.fl_hash == 1) {
     if (!flag) {
       s21_putch(&strptr, '.');
@@ -460,7 +464,9 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
       }
     }
   }
-
+  /***
+   * добавляем знаки
+   */
   if (sign == 1 || opt.fl_plus == 1 || opt.fl_space == 1) {
     char fl[2] = "\0";
     if (sign == 1) {
@@ -479,34 +485,37 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
       }
     }
     char *tmp = s21_insert(str, fl, 0);
-    s21_strcpy(str, tmp);
+    s21_strncpy(str, tmp, s21_strlen(tmp));
     free(tmp);
     len++;
   }
-
+  /***
+   * добавляем пробелы
+   */
   if (opt.width > len) {
     int ow = opt.width - len;
     while (ow-- > 0) {
       if (opt.fl_minus == 1) {
         char *tmp = s21_insert(str, " ", len);
-        s21_strcpy(str, tmp);
+        s21_strncpy(str, tmp, s21_strlen(tmp));
         free(tmp);
       } else {
         if (opt.fl_zero == 1 && !flag) {
           int pos = 0;
           if (sign == 1 || opt.fl_plus == 1 || opt.fl_space == 1) pos = 1;
           char *tmp = s21_insert(str, "0", pos);
-          s21_strcpy(str, tmp);
+          s21_strncpy(str, tmp, s21_strlen(tmp));
           free(tmp);
         } else {
           char *tmp = s21_insert(str, " ", 0);
-          s21_strcpy(str, tmp);
+          s21_strncpy(str, tmp, s21_strlen(tmp));
           free(tmp);
         }
       }
       len++;
     }
   }
+
   s21_strncpy(dest, str, len);
   return len;
 }

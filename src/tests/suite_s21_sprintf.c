@@ -620,13 +620,83 @@ START_TEST(s21_sprintf_s_9) {
 }
 END_TEST
 
-START_TEST(s21_ftoa_1) {
-  double d = 123.456;
+START_TEST(s21_sprintf_f_1) {
   char dest[100];
   char s21_dest[100];
-  sprintf(dest, "%f", d);
-  s21_ftoa(s21_dest, d, 6);
+  int s = sprintf(dest, "aa bb %f cc", 1.234);
+  int s21 = s21_sprintf(s21_dest, "aa bb %f cc", 1.234);
   ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_2) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %+f cc", 1.234);
+  int s21 = s21_sprintf(s21_dest, "aa bb %+f cc", 1.234);
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_3) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb % f cc", 1.234);
+  int s21 = s21_sprintf(s21_dest, "aa bb % f cc", 1.234);
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_4) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %f cc", -1.234);
+  int s21 = s21_sprintf(s21_dest, "aa bb %f cc", -1.234);
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_5) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %+f cc", -1.234);
+  int s21 = s21_sprintf(s21_dest, "aa bb %+f cc", -1.234);
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_6) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb % f cc", -1.234);
+  int s21 = s21_sprintf(s21_dest, "aa bb % f cc", -1.234);
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_7) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %0*.*f cc", 15, 5, 1.234);
+  int s21 = s21_sprintf(s21_dest, "aa bb %0*.*f cc", 15, 5, 1.234);
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_8) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %0*.*f cc", 15, 5, -1.234);
+  int s21 = s21_sprintf(s21_dest, "aa bb %0*.*f cc", 15, 5, -1.234);
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
 }
 END_TEST
 
@@ -714,7 +784,14 @@ Suite *suite_s21_sprintf() {
   tcase_add_test(tc_core, s21_sprintf_s_8);
   tcase_add_test(tc_core, s21_sprintf_s_9);
 
-  tcase_add_test(tc_core, s21_ftoa_1);
+  tcase_add_test(tc_core, s21_sprintf_f_1);
+  tcase_add_test(tc_core, s21_sprintf_f_2);
+  tcase_add_test(tc_core, s21_sprintf_f_3);
+  tcase_add_test(tc_core, s21_sprintf_f_4);
+  tcase_add_test(tc_core, s21_sprintf_f_5);
+  tcase_add_test(tc_core, s21_sprintf_f_6);
+  tcase_add_test(tc_core, s21_sprintf_f_7);
+  tcase_add_test(tc_core, s21_sprintf_f_8);
 
   suite_add_tcase(s, tc_core);
 

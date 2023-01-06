@@ -27,15 +27,21 @@ void run_all_testcases() {
 }
 
 int main() {
-  // run_all_testcases();
+  run_all_testcases();
 
-  long double d = -1234567.890123456123456L;
-  char dest[100];
-  char s21_dest[100];
-  sprintf(dest, "%.25Lf", d);
-  s21_ftoa(s21_dest, d, 25);
-  printf(" sprintf: %s\n", dest);
-  printf("s21_ftoa: %s\n", s21_dest);
+  // long double d = 1234567.89L;
+  // char dest[100];
+  // char s21_dest[100];
+  // int s = sprintf(dest, "aa bb %0+*.*Lf\ne\te", 24, 8, d);
+  // int s21_s = s21_sprintf(s21_dest, "aa bb %0+*.*Lf\ne\te", 24, 8, d);
+
+  // char dest[100];
+  // char s21_dest[100];
+  // int s = sprintf(dest, "aa bb %0*.*f cc", 15, 28, 1.234);
+  // int s21_s = s21_sprintf(s21_dest, "aa bb %0*.*f cc", 15, 28, 1.234);
+
+  // printf("    str = %s;     s = %d\n", dest, s);
+  // printf("s21_str = %s; s21_s = %d\n", s21_dest, s21_s);
 
   return 0;
 }

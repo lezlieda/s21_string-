@@ -380,11 +380,13 @@ long double s21_pow(int a, int b) {
   return res;
 }
 
-int s21_ftoa(char *dest, long double num, int precision) {
-  int sign = 0;
+int s21_sprinter_float_L(char *dest, s21_sprintf_opt opt, long double c) {
+  char str[128] = "\0";
+  char *strptr = str;
   int len = 0;
-  char str[64] = "\0";
-  int i = 0;
+  int sign = 0;
+  long double num = c;
+  if (opt.precision == -1) opt.precision = 6;
   if (num < 0) {
     sign = 1;
     num = -num;
@@ -401,52 +403,46 @@ int s21_ftoa(char *dest, long double num, int precision) {
     char sym[2] = "\0";
     long double c = tmp / s21_pow(10, range);
     s21_itoa(sym, (int)c, 10);
-    str[i++] = sym[0];
+    s21_putch(&strptr, sym[0]);
     len++;
     tmp -= (int)c * s21_pow(10, range);
   }
-  if (precision > 0) {
-    str[i++] = '.';
+  if (opt.precision > 0 || opt.fl_hash == 1) {
+    s21_putch(&strptr, '.');
     len++;
-    while (precision-- > 0) {
-      long double c = tmp * 10;
-      char sym[2] = "\0";
-      s21_itoa(sym, (int)c, 10);
-      str[i++] = sym[0];
-      len++;
-      tmp = c - (int)c;
+    if (opt.precision < 17) {
+      long long int pr = (long long)s21_pow(10, opt.precision);
+      long long int dec = (long long)(num * pr) % pr;
+      char sym[128] = "\0";
+      s21_itoa(sym, dec, 10);
+      s21_strcpy(strptr, sym);
+      len += s21_strlen(sym);
+    } else {
+      while (opt.precision-- > 0) {
+        long double c = tmp * 10;
+        if (opt.precision == 0) c += 1;
+        char sym[2] = "\0";
+        s21_itoa(sym, (int)c, 10);
+        s21_putch(&strptr, sym[0]);
+        len++;
+        tmp = c - (int)c;
+      }
     }
   }
-  if (sign == 1) {
-    char *tmp = s21_insert(str, "-", 0);
+  if (sign == 1 || opt.fl_plus == 1 || opt.fl_space == 1) {
+    char fl[2] = "\0";
+    if (sign == 1) {
+      fl[0] = '-';
+    } else if (opt.fl_plus == 1) {
+      fl[0] = '+';
+    } else if (opt.fl_space == 1) {
+      fl[0] = ' ';
+    }
+    char *tmp = s21_insert(str, fl, 0);
     s21_strcpy(str, tmp);
     free(tmp);
     len++;
   }
-  s21_strcpy(dest, str);
-
-  return len;
-}
-
-int s21_sprinter_float(char *dest, s21_sprintf_opt opt, long double c) {
-  char str[128] = "\0";
-  char *strptr = str;
-  int len = 0;
-  // int sign = 0;
-  // if (c < 0) {
-  //   sign = 1;
-  //   c = -c;
-  // }
-  long double num = 0;
-  if (opt.len_L == 1) {
-    num = (long double)c;
-  } else {
-    num = (double)c;
-  }
-  if (opt.precision == -1) opt.precision = 6;
-
-  len = s21_ftoa(strptr, num, opt.precision);
-
   if (opt.width > len) {
     int ow = opt.width - len;
     while (ow-- > 0) {
@@ -456,7 +452,9 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, long double c) {
         free(tmp);
       } else {
         if (opt.fl_zero == 1) {
-          char *tmp = s21_insert(str, "0", 0);
+          int pos = 0;
+          if (sign == 1 || opt.fl_plus == 1 || opt.fl_space == 1) pos = 1;
+          char *tmp = s21_insert(str, "0", pos);
           s21_strcpy(str, tmp);
           free(tmp);
         } else {
@@ -468,7 +466,98 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, long double c) {
       len++;
     }
   }
-  s21_strcpy(dest, str);
+  printf("str: %s\n", str);
+  s21_strncpy(dest, str, len);
+  return len;
+}
+
+int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
+  char str[128] = "\0";
+  char *strptr = str;
+  int len = 0;
+  int sign = 0;
+  double num = c;
+  if (opt.precision == -1) opt.precision = 6;
+  if (num < 0) {
+    sign = 1;
+    num = -num;
+  }
+  int range = 0;
+  long double tmp = num;
+  while (tmp >= 1) {
+    tmp /= 10;
+    range++;
+  }
+  tmp = num;
+  if (range == 0) range = 1;
+  while (range-- > 0) {
+    char sym[2] = "\0";
+    long double c = tmp / s21_pow(10, range);
+    s21_itoa(sym, (int)c, 10);
+    s21_putch(&strptr, sym[0]);
+    len++;
+    tmp -= (int)c * s21_pow(10, range);
+  }
+  if (opt.precision > 0 || opt.fl_hash == 1) {
+    s21_putch(&strptr, '.');
+    len++;
+    if (opt.precision < 17) {
+      long long int pr = (long long)s21_pow(10, opt.precision);
+      long long int dec = (long long)(num * pr) % pr;
+      char sym[128] = "\0";
+      s21_itoa(sym, dec, 10);
+      s21_strcpy(strptr, sym);
+      len += s21_strlen(sym);
+    } else {
+      while (opt.precision-- > 0) {
+        long double c = tmp * 10;
+        if (opt.precision == 0) c += 1;
+        char sym[2] = "\0";
+        s21_itoa(sym, (int)c, 10);
+        s21_putch(&strptr, sym[0]);
+        len++;
+        tmp = c - (int)c;
+      }
+    }
+  }
+  if (sign == 1 || opt.fl_plus == 1 || opt.fl_space == 1) {
+    char fl[2] = "\0";
+    if (sign == 1) {
+      fl[0] = '-';
+    } else if (opt.fl_plus == 1) {
+      fl[0] = '+';
+    } else if (opt.fl_space == 1) {
+      fl[0] = ' ';
+    }
+    char *tmp = s21_insert(str, fl, 0);
+    s21_strcpy(str, tmp);
+    free(tmp);
+    len++;
+  }
+  if (opt.width > len) {
+    int ow = opt.width - len;
+    while (ow-- > 0) {
+      if (opt.fl_minus == 1) {
+        char *tmp = s21_insert(str, " ", len);
+        s21_strcpy(str, tmp);
+        free(tmp);
+      } else {
+        if (opt.fl_zero == 1) {
+          int pos = 0;
+          if (sign == 1 || opt.fl_plus == 1 || opt.fl_space == 1) pos = 1;
+          char *tmp = s21_insert(str, "0", pos);
+          s21_strcpy(str, tmp);
+          free(tmp);
+        } else {
+          char *tmp = s21_insert(str, " ", 0);
+          s21_strcpy(str, tmp);
+          free(tmp);
+        }
+      }
+      len++;
+    }
+  }
+  s21_strncpy(dest, str, len);
   return len;
 }
 
@@ -519,7 +608,11 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
           str += step;
           break;
         case 'f':
-          step = s21_sprinter_float(str, opt, va_arg(args, double));
+          if (opt.len_L == 1) {
+            step = s21_sprinter_float_L(str, opt, va_arg(args, long double));
+          } else {
+            step = s21_sprinter_float(str, opt, va_arg(args, double));
+          }
           res += step;
           str += step;
           break;

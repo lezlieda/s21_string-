@@ -29,19 +29,22 @@ void run_all_testcases() {
 int main() {
   run_all_testcases();
 
-  // long double d = 1234567.89L;
+  // double value[8] = {-321.851162, -0.0, 0.0,      321.851162,
+  //                    -NAN,        NAN,  INFINITY, -INFINITY};
   // char dest[100];
-  // char s21_dest[100];
-  // int s = sprintf(dest, "aa bb %0+*.*Lf\ne\te", 24, 8, d);
-  // int s21_s = s21_sprintf(s21_dest, "aa bb %0+*.*Lf\ne\te", 24, 8, d);
-
-  // char dest[100];
-  // char s21_dest[100];
-  // int s = sprintf(dest, "aa bb %0*.*f cc", 15, 28, 1.234);
-  // int s21_s = s21_sprintf(s21_dest, "aa bb %0*.*f cc", 15, 28, 1.234);
-
-  // printf("    str = %s;     s = %d\n", dest, s);
-  // printf("s21_str = %s; s21_s = %d\n", s21_dest, s21_s);
+  // // char s21_dest[100];
+  // const char *format = "aa bb % *.*f cc";
+  // int width = 2;
+  // int precision = 10;
+  // for (int i = 0; i < 8; i++) {
+  //   printf("\tvalue = %f; width = %d; precision = %d\n", value[i], width,
+  //          precision);
+  //   int s = s21_sprintf(dest, format, width, precision, value[i]);
+  //   printf("str = %s; sprintf = %d\n", dest, s);
+  //   // int s21 = s21_sprintf(s21_dest, format, 0, 0, value[i]);
+  //   // printf("\tvalue=%f\ns21_sprintf=%d; sprintf=%d;\n", value[i], s21, s);
+  //   // printf("\tdest=%s\ns21_dest=%s;\n", dest, s21_dest);
+  // }
 
   return 0;
 }

@@ -7,54 +7,6 @@
 #include "../s21_string.h"
 #include "../suitecases.h"
 
-START_TEST(s21_sprinter_char_1) {
-  char *dest = malloc(100);
-  s21_sprintf_opt opt = {0};
-  opt.width = 1;
-  opt.fl_minus = 0;
-  int sc = s21_sprinter_char(dest, opt, 'a');
-  ck_assert_str_eq("a", dest);
-  ck_assert_int_eq(1, sc);
-  free(dest);
-}
-END_TEST
-
-START_TEST(s21_sprinter_char_2) {
-  char *dest = malloc(100);
-  s21_sprintf_opt opt = {0};
-  opt.width = 2;
-  opt.fl_minus = 0;
-  int sc = s21_sprinter_char(dest, opt, 'a');
-  ck_assert_str_eq(" a", dest);
-  ck_assert_int_eq(2, sc);
-  free(dest);
-}
-END_TEST
-
-START_TEST(s21_sprinter_char_3) {
-  char *dest = malloc(100);
-  s21_sprintf_opt opt = {0};
-  opt.width = 2;
-  opt.fl_minus = 1;
-  int sc = s21_sprinter_char(dest, opt, 'a');
-  ck_assert_str_eq("a ", dest);
-  ck_assert_int_eq(2, sc);
-  free(dest);
-}
-END_TEST
-
-START_TEST(s21_sprinter_char_4) {
-  char *dest = malloc(100);
-  s21_sprintf_opt opt = {0};
-  opt.width = 5;
-  opt.fl_minus = 1;
-  int sc = s21_sprinter_char(dest, opt, 'a');
-  ck_assert_str_eq("a    ", dest);
-  ck_assert_int_eq(5, sc);
-  free(dest);
-}
-END_TEST
-
 START_TEST(s21_sprintf_proc_1) {
   char dest[100];
   char s21_dest[100];
@@ -514,163 +466,526 @@ START_TEST(s21_sprintf_s_9) {
 }
 END_TEST
 
+/*
+ * Test for %f
+ */
+
 START_TEST(s21_sprintf_f_1) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
   char dest[100];
   char s21_dest[100];
-  int s = sprintf(dest, "aa bb %f cc", 1.234);
-  int s21 = s21_sprintf(s21_dest, "aa bb %f cc", 1.234);
-  ck_assert_str_eq(dest, s21_dest);
-  ck_assert_int_eq(s, s21);
+  const char *format = "aa bb % *.*f cc";
+  int width = 1;
+  int precision = 6;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
 }
 END_TEST
 
 START_TEST(s21_sprintf_f_2) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
   char dest[100];
   char s21_dest[100];
-  int s = sprintf(dest, "aa bb %+f cc", 1.234);
-  int s21 = s21_sprintf(s21_dest, "aa bb %+f cc", 1.234);
-  ck_assert_str_eq(dest, s21_dest);
-  ck_assert_int_eq(s, s21);
+  const char *format = "aa bb % *.*f cc";
+  int width = 1;
+  int precision = 0;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
 }
 END_TEST
 
 START_TEST(s21_sprintf_f_3) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
   char dest[100];
   char s21_dest[100];
-  int s = sprintf(dest, "aa bb % f cc", 1.234);
-  int s21 = s21_sprintf(s21_dest, "aa bb % f cc", 1.234);
-  ck_assert_str_eq(dest, s21_dest);
-  ck_assert_int_eq(s, s21);
+  const char *format = "aa bb % *.*f cc";
+  int width = 10;
+  int precision = 6;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
 }
 END_TEST
 
 START_TEST(s21_sprintf_f_4) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
   char dest[100];
   char s21_dest[100];
-  int s = sprintf(dest, "aa bb %f cc", -1.234);
-  int s21 = s21_sprintf(s21_dest, "aa bb %f cc", -1.234);
-  ck_assert_str_eq(dest, s21_dest);
-  ck_assert_int_eq(s, s21);
+  const char *format = "aa bb % *.*f cc";
+  int width = 10;
+  int precision = 0;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
 }
 END_TEST
 
 START_TEST(s21_sprintf_f_5) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
   char dest[100];
   char s21_dest[100];
-  int s = sprintf(dest, "aa bb %+f cc", -1.234);
-  int s21 = s21_sprintf(s21_dest, "aa bb %+f cc", -1.234);
-  ck_assert_str_eq(dest, s21_dest);
-  ck_assert_int_eq(s, s21);
+  const char *format = "aa bb %-*.*f cc";
+  int width = 1;
+  int precision = 6;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
 }
 END_TEST
 
 START_TEST(s21_sprintf_f_6) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
   char dest[100];
   char s21_dest[100];
-  int s = sprintf(dest, "aa bb % f cc", -1.234);
-  int s21 = s21_sprintf(s21_dest, "aa bb % f cc", -1.234);
-  ck_assert_str_eq(dest, s21_dest);
-  ck_assert_int_eq(s, s21);
+  const char *format = "aa bb %-*.*f cc";
+  int width = 1;
+  int precision = 0;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
 }
 END_TEST
 
 START_TEST(s21_sprintf_f_7) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
   char dest[100];
   char s21_dest[100];
-  int s = sprintf(dest, "aa bb %0*.*f cc", 15, 5, 1.234);
-  int s21 = s21_sprintf(s21_dest, "aa bb %0*.*f cc", 15, 5, 1.234);
-  ck_assert_str_eq(dest, s21_dest);
-  ck_assert_int_eq(s, s21);
+  const char *format = "aa bb %-*.*f cc";
+  int width = 10;
+  int precision = 6;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
 }
 END_TEST
 
 START_TEST(s21_sprintf_f_8) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
   char dest[100];
   char s21_dest[100];
-  int s = sprintf(dest, "aa bb %0*.*f cc", 15, 5, -1.234);
-  int s21 = s21_sprintf(s21_dest, "aa bb %0*.*f cc", 15, 5, -1.234);
-  ck_assert_str_eq(dest, s21_dest);
-  ck_assert_int_eq(s, s21);
+  const char *format = "aa bb %-*.*f cc";
+  int width = 10;
+  int precision = 0;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
 }
 END_TEST
 
 START_TEST(s21_sprintf_f_9) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
   char dest[100];
   char s21_dest[100];
-  int s = sprintf(dest, "aa bb %0*.*f cc", 25, 17, 0.0);
-  int s21 = s21_sprintf(s21_dest, "aa bb %0*.*f cc", 25, 17, 0.0);
-  ck_assert_str_eq(dest, s21_dest);
-  ck_assert_int_eq(s, s21);
+  const char *format = "aa bb %+*.*f cc";
+  int width = 1;
+  int precision = 6;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
 }
 END_TEST
 
 START_TEST(s21_sprintf_f_10) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
   char dest[100];
   char s21_dest[100];
-  int s = sprintf(dest, "aa bb %0*.*f cc", 15, 5, -0.0);
-  int s21 = s21_sprintf(s21_dest, "aa bb %0*.*f cc", 15, 5, -0.0);
-  ck_assert_str_eq(dest, s21_dest);
-  ck_assert_int_eq(s, s21);
+  const char *format = "aa bb %+*.*f cc";
+  int width = 1;
+  int precision = 0;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
 }
 END_TEST
 
 START_TEST(s21_sprintf_f_11) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
   char dest[100];
   char s21_dest[100];
-  int s = sprintf(dest, "aa bb %.0f cc", (double)1);
-  int s21 = s21_sprintf(s21_dest, "aa bb %.0f cc", (double)1);
-  ck_assert_str_eq(dest, s21_dest);
-  ck_assert_int_eq(s, s21);
+  const char *format = "aa bb %+*.*f cc";
+  int width = 10;
+  int precision = 6;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
 }
 END_TEST
 
 START_TEST(s21_sprintf_f_12) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
   char dest[100];
   char s21_dest[100];
-  int s = sprintf(dest, "aa bb %#.0f cc", (double)1);
-  int s21 = s21_sprintf(s21_dest, "aa bb %#.0f cc", (double)1);
-  ck_assert_str_eq(dest, s21_dest);
-  ck_assert_int_eq(s, s21);
+  const char *format = "aa bb %+*.*f cc";
+  int width = 10;
+  int precision = 0;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
 }
 END_TEST
 
 START_TEST(s21_sprintf_f_13) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
   char dest[100];
   char s21_dest[100];
-  int s = sprintf(dest, "aa bb %0*.*Lf cc", 25, 17, 0.0L);
-  int s21 = s21_sprintf(s21_dest, "aa bb %0*.*Lf cc", 25, 17, 0.0L);
-  ck_assert_str_eq(dest, s21_dest);
-  ck_assert_int_eq(s, s21);
+  const char *format = "aa bb %0*.*f cc";
+  int width = 1;
+  int precision = 6;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
 }
 END_TEST
 
 START_TEST(s21_sprintf_f_14) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
   char dest[100];
   char s21_dest[100];
-  int s = sprintf(dest, "aa bb %0*.*Lf cc", 15, 5, -0.0L);
-  int s21 = s21_sprintf(s21_dest, "aa bb %0*.*Lf cc", 15, 5, -0.0L);
-  ck_assert_str_eq(dest, s21_dest);
-  ck_assert_int_eq(s, s21);
+  const char *format = "aa bb %0*.*f cc";
+  int width = 1;
+  int precision = 0;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
 }
 END_TEST
 
 START_TEST(s21_sprintf_f_15) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
   char dest[100];
   char s21_dest[100];
-  int s = sprintf(dest, "aa bb %.0Lf cc", (long double)1);
-  int s21 = s21_sprintf(s21_dest, "aa bb %.0Lf cc", (long double)1);
-  ck_assert_str_eq(dest, s21_dest);
-  ck_assert_int_eq(s, s21);
+  const char *format = "aa bb %0*.*f cc";
+  int width = 10;
+  int precision = 6;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
 }
 END_TEST
 
 START_TEST(s21_sprintf_f_16) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
   char dest[100];
   char s21_dest[100];
-  int s = sprintf(dest, "aa bb %#.0Lf cc", (long double)1);
-  int s21 = s21_sprintf(s21_dest, "aa bb %#.0Lf cc", (long double)1);
-  ck_assert_str_eq(dest, s21_dest);
-  ck_assert_int_eq(s, s21);
+  const char *format = "aa bb %0*.*f cc";
+  int width = 10;
+  int precision = 0;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_17) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
+  char dest[100];
+  char s21_dest[100];
+  const char *format = "aa bb %#*.*f cc";
+  int width = 1;
+  int precision = 6;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_18) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
+  char dest[100];
+  char s21_dest[100];
+  const char *format = "aa bb %#*.*f cc";
+  int width = 1;
+  int precision = 0;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_19) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
+  char dest[100];
+  char s21_dest[100];
+  const char *format = "aa bb %#*.*f cc";
+  int width = 10;
+  int precision = 6;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_20) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
+  char dest[100];
+  char s21_dest[100];
+  const char *format = "aa bb %#*.*f cc";
+  int width = 10;
+  int precision = 0;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_21) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
+  char dest[100];
+  char s21_dest[100];
+  const char *format = "aa bb %-+*.*f cc";
+  int width = 1;
+  int precision = 6;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_22) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
+  char dest[100];
+  char s21_dest[100];
+  const char *format = "aa bb %- *.*f cc";
+  int width = 1;
+  int precision = 0;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_23) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
+  char dest[100];
+  char s21_dest[100];
+  const char *format = "aa bb % #*.*f cc";
+  int width = 10;
+  int precision = 6;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_24) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
+  char dest[100];
+  char s21_dest[100];
+  const char *format = "aa bb %#0*.*f cc";
+  int width = 10;
+  int precision = 0;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_25) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
+  char dest[100];
+  char s21_dest[100];
+  const char *format = "aa bb %0*f cc";
+  int width = 10;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_26) {
+  double value[10] = {-3.2321, -0.82, -0.0, 0.0,      0.616,
+                      3.1415,  NAN,   -NAN, INFINITY, -INFINITY};
+  char dest[100];
+  char s21_dest[100];
+  const char *format = "aa bb %0*.*f cc";
+  int width = 10;
+  int precision = 22;
+  for (int i = 0; i < 10; i++) {
+    int s = sprintf(dest, format, width, precision, value[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, value[i]);
+    ck_assert_msg(s == s21, "\n\tvalue=%f\ns21_sprintf=%d; sprintf=%d;",
+                  value[i], s21, s);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "\n\tvalue=%f\ns21_dest=%s;\n    dest=%s;", value[i],
+                  s21_dest, dest);
+  }
 }
 END_TEST
 
@@ -684,11 +999,6 @@ Suite *suite_s21_sprintf() {
   tc_core = tcase_create("case_s21_sprintf");
 
   tcase_add_test(tc_core, s21_sprintf_proc_1);
-
-  tcase_add_test(tc_core, s21_sprinter_char_1);
-  tcase_add_test(tc_core, s21_sprinter_char_2);
-  tcase_add_test(tc_core, s21_sprinter_char_3);
-  tcase_add_test(tc_core, s21_sprinter_char_4);
 
   tcase_add_test(tc_core, s21_sprintf_c_1);
   tcase_add_test(tc_core, s21_sprintf_c_2);
@@ -755,6 +1065,16 @@ Suite *suite_s21_sprintf() {
   tcase_add_test(tc_core, s21_sprintf_f_14);
   tcase_add_test(tc_core, s21_sprintf_f_15);
   tcase_add_test(tc_core, s21_sprintf_f_16);
+  tcase_add_test(tc_core, s21_sprintf_f_17);
+  tcase_add_test(tc_core, s21_sprintf_f_18);
+  tcase_add_test(tc_core, s21_sprintf_f_19);
+  tcase_add_test(tc_core, s21_sprintf_f_20);
+  tcase_add_test(tc_core, s21_sprintf_f_21);
+  tcase_add_test(tc_core, s21_sprintf_f_22);
+  tcase_add_test(tc_core, s21_sprintf_f_23);
+  tcase_add_test(tc_core, s21_sprintf_f_24);
+  tcase_add_test(tc_core, s21_sprintf_f_25);
+  tcase_add_test(tc_core, s21_sprintf_f_26);
 
   suite_add_tcase(s, tc_core);
 

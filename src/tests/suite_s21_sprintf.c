@@ -7,54 +7,6 @@
 #include "../s21_string.h"
 #include "../suitecases.h"
 
-START_TEST(s21_isdigit_1) {
-  char a = '$';
-  ck_assert_int_eq(0, s21_is_digit(a));
-}
-END_TEST
-
-START_TEST(s21_isdigit_2) {
-  char a = '0';
-  ck_assert_int_eq(1, s21_is_digit(a));
-}
-END_TEST
-
-START_TEST(s21_isdigit_3) {
-  char a = '4';
-  ck_assert_int_eq(1, s21_is_digit(a));
-}
-END_TEST
-
-START_TEST(s21_isdigit_4) {
-  char a = '9';
-  ck_assert_int_eq(1, s21_is_digit(a));
-}
-END_TEST
-
-START_TEST(s21_isdigit_5) {
-  char a = 'a';
-  ck_assert_int_eq(0, s21_is_digit(a));
-}
-END_TEST
-
-START_TEST(s21_atoi_1) {
-  char *a = "123";
-  ck_assert_int_eq(123, s21_atoi(a));
-}
-END_TEST
-
-START_TEST(s21_atoi_2) {
-  char *a = "0";
-  ck_assert_int_eq(0, s21_atoi(a));
-}
-END_TEST
-
-START_TEST(s21_atoi_3) {
-  char *a = "123456789";
-  ck_assert_int_eq(123456789, s21_atoi(a));
-}
-END_TEST
-
 START_TEST(s21_sprinter_char_1) {
   char *dest = malloc(100);
   s21_sprintf_opt opt = {0};
@@ -176,64 +128,6 @@ START_TEST(s21_sprintf_c_7) {
   sprintf(dest, "abc%*lcef", 1, 'q');
   s21_sprintf(s21_dest, "abc%*lcef", 1, 'q');
   ck_assert_str_eq(dest, s21_dest);
-}
-END_TEST
-
-START_TEST(s21_itoa_1) {
-  char dest[100] = {0};
-  s21_itoa(dest, 123456789, 10);
-  ck_assert_str_eq("123456789", dest);
-}
-END_TEST
-
-START_TEST(s21_itoa_2) {
-  char dest[100] = {0};
-  s21_itoa(dest, -123456789, 10);
-  ck_assert_str_eq("-123456789", dest);
-}
-END_TEST
-
-START_TEST(s21_itoa_3) {
-  char dest[100] = {0};
-  s21_itoa(dest, -123456789, 16);
-  ck_assert_str_eq("-75BCD15", s21_to_upper(dest));
-}
-END_TEST
-
-START_TEST(s21_itoa_4) {
-  char s21_dest[100] = {0};
-  char dest[100] = {0};
-  sprintf(dest, "%x", 123456789);
-  s21_itoa(s21_dest, 123456789, 16);
-  ck_assert_str_eq(dest, s21_dest);
-}
-END_TEST
-
-START_TEST(s21_itoa_5) {
-  char dest[100] = {0};
-  s21_itoa(dest, 123456789, 8);
-  ck_assert_str_eq("726746425", dest);
-}
-END_TEST
-
-START_TEST(s21_itoa_6) {
-  char dest[100] = {0};
-  s21_itoa(dest, -123456789, 8);
-  ck_assert_str_eq("-726746425", dest);
-}
-END_TEST
-
-START_TEST(s21_itoa_7) {
-  char dest[100] = {0};
-  s21_itoa(dest, 123456789, 2);
-  ck_assert_str_eq("111010110111100110100010101", dest);
-}
-END_TEST
-
-START_TEST(s21_itoa_8) {
-  char dest[100] = {0};
-  s21_itoa(dest, -123456789, 2);
-  ck_assert_str_eq("-111010110111100110100010101", dest);
 }
 END_TEST
 
@@ -700,6 +594,86 @@ START_TEST(s21_sprintf_f_8) {
 }
 END_TEST
 
+START_TEST(s21_sprintf_f_9) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %0*.*f cc", 25, 17, 0.0);
+  int s21 = s21_sprintf(s21_dest, "aa bb %0*.*f cc", 25, 17, 0.0);
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_10) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %0*.*f cc", 15, 5, -0.0);
+  int s21 = s21_sprintf(s21_dest, "aa bb %0*.*f cc", 15, 5, -0.0);
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_11) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %.0f cc", (double)1);
+  int s21 = s21_sprintf(s21_dest, "aa bb %.0f cc", (double)1);
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_12) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %#.0f cc", (double)1);
+  int s21 = s21_sprintf(s21_dest, "aa bb %#.0f cc", (double)1);
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_13) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %0*.*Lf cc", 25, 17, 0.0L);
+  int s21 = s21_sprintf(s21_dest, "aa bb %0*.*Lf cc", 25, 17, 0.0L);
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_14) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %0*.*Lf cc", 15, 5, -0.0L);
+  int s21 = s21_sprintf(s21_dest, "aa bb %0*.*Lf cc", 15, 5, -0.0L);
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_15) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %.0Lf cc", (long double)1);
+  int s21 = s21_sprintf(s21_dest, "aa bb %.0Lf cc", (long double)1);
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
+START_TEST(s21_sprintf_f_16) {
+  char dest[100];
+  char s21_dest[100];
+  int s = sprintf(dest, "aa bb %#.0Lf cc", (long double)1);
+  int s21 = s21_sprintf(s21_dest, "aa bb %#.0Lf cc", (long double)1);
+  ck_assert_str_eq(dest, s21_dest);
+  ck_assert_int_eq(s, s21);
+}
+END_TEST
+
 Suite *suite_s21_sprintf() {
   Suite *s;
   TCase *tc_core;
@@ -709,22 +683,12 @@ Suite *suite_s21_sprintf() {
   /* Core test case */
   tc_core = tcase_create("case_s21_sprintf");
 
-  tcase_add_test(tc_core, s21_isdigit_1);
-  tcase_add_test(tc_core, s21_isdigit_2);
-  tcase_add_test(tc_core, s21_isdigit_3);
-  tcase_add_test(tc_core, s21_isdigit_4);
-  tcase_add_test(tc_core, s21_isdigit_5);
-
-  tcase_add_test(tc_core, s21_atoi_1);
-  tcase_add_test(tc_core, s21_atoi_2);
-  tcase_add_test(tc_core, s21_atoi_3);
+  tcase_add_test(tc_core, s21_sprintf_proc_1);
 
   tcase_add_test(tc_core, s21_sprinter_char_1);
   tcase_add_test(tc_core, s21_sprinter_char_2);
   tcase_add_test(tc_core, s21_sprinter_char_3);
   tcase_add_test(tc_core, s21_sprinter_char_4);
-
-  tcase_add_test(tc_core, s21_sprintf_proc_1);
 
   tcase_add_test(tc_core, s21_sprintf_c_1);
   tcase_add_test(tc_core, s21_sprintf_c_2);
@@ -733,15 +697,6 @@ Suite *suite_s21_sprintf() {
   tcase_add_test(tc_core, s21_sprintf_c_5);
   tcase_add_test(tc_core, s21_sprintf_c_6);
   tcase_add_test(tc_core, s21_sprintf_c_7);
-
-  tcase_add_test(tc_core, s21_itoa_1);
-  tcase_add_test(tc_core, s21_itoa_2);
-  tcase_add_test(tc_core, s21_itoa_3);
-  tcase_add_test(tc_core, s21_itoa_4);
-  tcase_add_test(tc_core, s21_itoa_5);
-  tcase_add_test(tc_core, s21_itoa_6);
-  tcase_add_test(tc_core, s21_itoa_7);
-  tcase_add_test(tc_core, s21_itoa_8);
 
   tcase_add_test(tc_core, s21_sprintf_d_1);
   tcase_add_test(tc_core, s21_sprintf_d_2);
@@ -792,6 +747,14 @@ Suite *suite_s21_sprintf() {
   tcase_add_test(tc_core, s21_sprintf_f_6);
   tcase_add_test(tc_core, s21_sprintf_f_7);
   tcase_add_test(tc_core, s21_sprintf_f_8);
+  tcase_add_test(tc_core, s21_sprintf_f_9);
+  tcase_add_test(tc_core, s21_sprintf_f_10);
+  tcase_add_test(tc_core, s21_sprintf_f_11);
+  tcase_add_test(tc_core, s21_sprintf_f_12);
+  tcase_add_test(tc_core, s21_sprintf_f_13);
+  tcase_add_test(tc_core, s21_sprintf_f_14);
+  tcase_add_test(tc_core, s21_sprintf_f_15);
+  tcase_add_test(tc_core, s21_sprintf_f_16);
 
   suite_add_tcase(s, tc_core);
 

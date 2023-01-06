@@ -385,9 +385,9 @@ int s21_sprinter_float_L(char *dest, s21_sprintf_opt opt, long double c) {
   char *strptr = str;
   int len = 0;
   int sign = 0;
-  long double num = c;
+  double num = c;
   if (opt.precision == -1) opt.precision = 6;
-  if (num < 0) {
+  if (num < 0 || 1 / num == -INFINITY) {
     sign = 1;
     num = -num;
   }
@@ -410,17 +410,25 @@ int s21_sprinter_float_L(char *dest, s21_sprintf_opt opt, long double c) {
   if (opt.precision > 0 || opt.fl_hash == 1) {
     s21_putch(&strptr, '.');
     len++;
-    if (opt.precision < 17) {
+    if (opt.precision < 17 && opt.precision > 0) {
       long long int pr = (long long)s21_pow(10, opt.precision);
       long long int dec = (long long)(num * pr) % pr;
       char sym[128] = "\0";
-      s21_itoa(sym, dec, 10);
-      s21_strcpy(strptr, sym);
+      char *sym_ptr = sym;
+      if (dec == 0) {
+        while (opt.precision-- > 0) {
+          s21_putch(&sym_ptr, '0');
+        }
+      } else {
+        s21_itoa(sym, dec, 10);
+      }
+      printf("sym: %s\n", sym);
+      s21_strncpy(strptr, sym, s21_strlen(sym));
       len += s21_strlen(sym);
     } else {
       while (opt.precision-- > 0) {
         long double c = tmp * 10;
-        if (opt.precision == 0) c += 1;
+        if (opt.precision == 0 && num != 0) c += 1;
         char sym[2] = "\0";
         s21_itoa(sym, (int)c, 10);
         s21_putch(&strptr, sym[0]);
@@ -466,7 +474,6 @@ int s21_sprinter_float_L(char *dest, s21_sprintf_opt opt, long double c) {
       len++;
     }
   }
-  printf("str: %s\n", str);
   s21_strncpy(dest, str, len);
   return len;
 }
@@ -478,7 +485,7 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
   int sign = 0;
   double num = c;
   if (opt.precision == -1) opt.precision = 6;
-  if (num < 0) {
+  if (num < 0 || 1 / num == -INFINITY) {
     sign = 1;
     num = -num;
   }
@@ -501,17 +508,25 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
   if (opt.precision > 0 || opt.fl_hash == 1) {
     s21_putch(&strptr, '.');
     len++;
-    if (opt.precision < 17) {
+    if (opt.precision < 17 && opt.precision > 0) {
       long long int pr = (long long)s21_pow(10, opt.precision);
       long long int dec = (long long)(num * pr) % pr;
       char sym[128] = "\0";
-      s21_itoa(sym, dec, 10);
-      s21_strcpy(strptr, sym);
+      char *sym_ptr = sym;
+      if (dec == 0) {
+        while (opt.precision-- > 0) {
+          s21_putch(&sym_ptr, '0');
+        }
+      } else {
+        s21_itoa(sym, dec, 10);
+      }
+      printf("sym: %s\n", sym);
+      s21_strncpy(strptr, sym, s21_strlen(sym));
       len += s21_strlen(sym);
     } else {
       while (opt.precision-- > 0) {
         long double c = tmp * 10;
-        if (opt.precision == 0) c += 1;
+        if (opt.precision == 0 && num != 0) c += 1;
         char sym[2] = "\0";
         s21_itoa(sym, (int)c, 10);
         s21_putch(&strptr, sym[0]);

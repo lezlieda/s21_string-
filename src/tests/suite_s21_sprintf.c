@@ -1040,6 +1040,44 @@ START_TEST(s21_sprintf_c_6) {
 }
 END_TEST
 
+START_TEST(s21_sprintf_c_7) {
+  wchar_t c[] = {0, 12, 123, 1234, 12345, 32132, 33333, 66666, 99999};
+  char dest[100];
+  char s21_dest[100];
+  const char *format = "aa bb %-*.*lc cc";
+  int width = 10;
+  int precision = 4;
+  for (int i = 0; i < 9; i++) {
+    int s = sprintf(dest, format, width, precision, c[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, c[i]);
+    // printf("c = %lc, s = %d, s21 = %d\n", c[i], s, s21);
+    // printf("    dest = %s\ns21_dest = %s\n", dest, s21_dest);
+    ck_assert_msg(s == s21, "s = %d, s21 = %d, c = %lc", s, s21, c[i]);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "dest = %s, s21_dest = %s, c = %lc", dest, s21_dest, c[i]);
+  }
+}
+END_TEST
+
+START_TEST(s21_sprintf_c_8) {
+  wchar_t c[] = {0, 12, 123, 1234, 12345, 32132, 33333, 66666, 99999};
+  char dest[100];
+  char s21_dest[100];
+  const char *format = "aa bb %*.*lc cc";
+  int width = 4;
+  int precision = 10;
+  for (int i = 0; i < 9; i++) {
+    int s = sprintf(dest, format, width, precision, c[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, precision, c[i]);
+    // printf("c = %lc, s = %d, s21 = %d\n", c[i], s, s21);
+    // printf("    dest = %s\ns21_dest = %s\n", dest, s21_dest);
+    ck_assert_msg(s == s21, "s = %d, s21 = %d, c = %lc", s, s21, c[i]);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "dest = %s, s21_dest = %s, c = %lc", dest, s21_dest, c[i]);
+  }
+}
+END_TEST
+
 Suite *suite_s21_sprintf() {
   Suite *s;
   TCase *tc_core;
@@ -1077,6 +1115,8 @@ Suite *suite_s21_sprintf() {
   tcase_add_test(tc_core, s21_sprintf_c_4);
   tcase_add_test(tc_core, s21_sprintf_c_5);
   tcase_add_test(tc_core, s21_sprintf_c_6);
+  tcase_add_test(tc_core, s21_sprintf_c_7);
+  tcase_add_test(tc_core, s21_sprintf_c_8);
 
   tcase_add_test(tc_core, s21_sprintf_s_1);
   tcase_add_test(tc_core, s21_sprintf_s_2);

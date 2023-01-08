@@ -53,6 +53,17 @@ int s21_itoa(char *dest, long long int num, int base) {
   return i;
 }
 
+int s21_utoa(char *dest, unsigned long long int num, int base) {
+  int i = 0;
+  do {
+    unsigned long long rem = num % base;
+    dest[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+  } while (num /= base);
+  dest[i] = '\0';
+  s21_strrev(dest);
+  return i;
+}
+
 void s21_putch(char **dest, char c) {
   **dest = c;
   (*dest)++;
@@ -146,6 +157,14 @@ int s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args) {
   } else {
     opt->spec = '\0';
   }
+  // printf(
+  //     "opt->fl_minus = %d\nopt->fl_plus = %d\nopt->fl_space =
+  //     %d\nopt->fl_hash "
+  //     "= %d\nopt->fl_zero = %d\nopt->width = %d\nopt->precision = "
+  //     "%d\nopt->len_h = %d\nopt->len_l = %d\nopt->len_L = %d\nopt->spec =
+  //     %c\n", opt->fl_minus, opt->fl_plus, opt->fl_space, opt->fl_hash,
+  //     opt->fl_zero, opt->width, opt->precision, opt->len_h, opt->len_l,
+  //     opt->len_L, opt->spec);
   return res;
 }
 
@@ -211,47 +230,58 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
   char *strptr = str;
   int len = 0;
   int sign = 0;
-  long long int num = 0;
+  long long int num = c;
   if (opt.len_h == 1) {  // устанавливаем длину int в зависимости от флага
-    num = (short int)c;
+    num = (short int)num;
   } else if (opt.len_l == 1) {
-    num = (long int)c;
+    num = (long int)num;
   } else {
-    num = (int)c;
+    num = (int)num;
   }
-  if (num < 0) sign = 1;
-  len = s21_itoa(strptr, num, 10);  // формируем строку в str
-  if (opt.fl_plus == 1 &&
-      num >= 0) {  // если есть флаг +, вставляем его в начало
-    char *tmp = s21_insert(str, "+", 0);
-    s21_strncpy(str, tmp, len + 1);
+  if (num < 0) {
+    sign = 1;
+    num = -num;
+  }
+  len = s21_itoa(strptr, num, 10);       // формируем строку
+  if (opt.precision == 0 && num == 0) {  // специальный случай
+    s21_strncpy(strptr, " ", 1);
+  }
+  /***
+   * добавляем знаки
+   */
+  if (sign == 1) {
+    char *tmp = s21_insert(strptr, "-", 0);
+    s21_strncpy(strptr, tmp, len + 1);
+    free(tmp);
+    len++;
+  } else if (opt.fl_plus == 1) {
+    char *tmp = s21_insert(strptr, "+", 0);
+    s21_strncpy(strptr, tmp, len + 1);
+    free(tmp);
+    len++;
+  } else if (opt.fl_space == 1) {
+    char *tmp = s21_insert(strptr, " ", 0);
+    s21_strncpy(strptr, tmp, len + 1);
     free(tmp);
     len++;
   }
-  if (opt.fl_space == 1 &&
-      num >= 0) {  // если есть флаг пробела, вставляем его в начало
-    char *tmp = s21_insert(str, " ", 0);
-    s21_strncpy(str, tmp, len + 1);
-    free(tmp);
-    len++;
+  /***
+   * добавляем пробелы и нули
+   */
+  int pos = 0;  // смещение для добавления знаков
+  if (sign == 1 || opt.fl_plus == 1 || opt.fl_space == 1) {
+    pos = 1;
   }
-  if (opt.precision > len) {
-    int op = (sign || opt.fl_plus == 1) ? opt.precision - len + 1
-                                        : opt.precision - len;
+  if (opt.precision > len - 1) {  // добавляем нули
+    int op = opt.precision - len + pos;
     while (op-- > 0) {
-      if (sign || opt.fl_plus == 1) {
-        char *tmp = s21_insert(str, "0", 1);
-        s21_strncpy(str, tmp, len + 1);
-        free(tmp);
-      } else {
-        char *tmp = s21_insert(str, "0", 0);
-        s21_strncpy(str, tmp, len + 1);
-        free(tmp);
-      }
+      char *tmp = s21_insert(str, "0", pos);
+      s21_strncpy(str, tmp, len + 1);
+      free(tmp);
       len++;
     }
   }
-  if (opt.width > len) {
+  if (opt.width > len) {  // добавляем пробелы
     int ow = opt.width - len;
     while (ow-- > 0) {
       if (opt.fl_minus == 1) {
@@ -259,16 +289,10 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
         s21_strncpy(str, tmp, len + 1);
         free(tmp);
       } else {
-        if (opt.fl_zero == 1) {
-          if (sign || opt.fl_plus == 1 || opt.fl_space == 1) {
-            char *tmp = s21_insert(str, "0", 1);
-            s21_strncpy(str, tmp, len + 1);
-            free(tmp);
-          } else {
-            char *tmp = s21_insert(str, "0", 0);
-            s21_strncpy(str, tmp, len + 1);
-            free(tmp);
-          }
+        if (opt.fl_zero == 1 && opt.precision == -1) {
+          char *tmp = s21_insert(str, "0", 0);
+          s21_strncpy(str, tmp, len + 1);
+          free(tmp);
         } else {
           char *tmp = s21_insert(str, " ", 0);
           s21_strncpy(str, tmp, len + 1);
@@ -294,12 +318,14 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
     num = (unsigned short int)c;
   } else if (opt.len_l == 1) {
     num = (unsigned long int)c;
-  } else if (opt.len_L == 1) {
-    num = (unsigned long long int)c;
   } else {
     num = (unsigned int)c;
   }
-  len = s21_itoa(strptr, num, 10);  // формируем строку в str
+  len = s21_utoa(strptr, num, 10);  // формируем строку в str
+  if (opt.precision == 0 &&
+      num == 0) {  // специальный случай, если точность 0 и число 0
+    s21_strncpy(strptr, " ", 1);
+  }
   if (opt.precision > len) {
     int op = opt.precision - len;
     while (op-- > 0) {
@@ -317,7 +343,7 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
         s21_strncpy(str, tmp, len + 1);
         free(tmp);
       } else {
-        if (opt.fl_zero == 1) {
+        if (opt.fl_zero == 1 && opt.precision == -1) {
           char *tmp = s21_insert(str, "0", 0);
           s21_strncpy(str, tmp, len + 1);
           free(tmp);
@@ -551,7 +577,11 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
           break;
         case 'd':
         case 'i':
-          step = s21_sprinter_int(str, opt, va_arg(args, long long int));
+          if (opt.len_l == 1) {
+            step = s21_sprinter_int(str, opt, va_arg(args, long int));
+          } else {
+            step = s21_sprinter_int(str, opt, va_arg(args, int));
+          }
           res += step;
           str += step;
           break;

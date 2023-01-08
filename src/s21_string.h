@@ -56,6 +56,7 @@ int s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args);
 int s21_atoi(const char *str);
 int s21_itoa(char *dest, long long int num, int base);
 int s21_sprinter_char(char *dest, s21_sprintf_opt opt, int c);
+int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c);
 
 int s21_is_delim(char c, const char *delim);
 

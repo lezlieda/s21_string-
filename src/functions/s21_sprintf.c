@@ -175,24 +175,30 @@ int s21_sprinter_char(char *dest, s21_sprintf_opt opt, int c) {
   if (opt.len_l == 1 && c > 127) {
     wchar_t wc = c;
     wchar_t *wstr = &wc;
+    int char_width = 2;
+    if (c > 2047 && c < 65535) {
+      char_width = 3;
+    } else if (c > 65535) {
+      char_width = 4;
+    }
     wcstombs(NULL, wstr, 0);
-    char *str = (char *)malloc(sizeof(char) * 3);
-    wcstombs(str, wstr, 3);
+    char *str = (char *)malloc(sizeof(char) * (char_width + 1));
+    wcstombs(str, wstr, char_width + 1);
     if (opt.fl_minus == 1) {
-      for (int i = 0; i < 2; i++) {
+      for (int i = 0; i < char_width; i++) {
         s21_putch(&dest, str[i]);
         res++;
       }
-      for (int i = 2; i < opt.width; i++) {
+      for (int i = char_width; i < opt.width; i++) {
         s21_putch(&dest, ' ');
         res++;
       }
     } else {
-      for (int i = 2; i < opt.width; i++) {
+      for (int i = char_width; i < opt.width; i++) {
         s21_putch(&dest, ' ');
         res++;
       }
-      for (int i = 0; i < 2; i++) {
+      for (int i = 0; i < char_width; i++) {
         s21_putch(&dest, str[i]);
         res++;
       }
@@ -289,8 +295,8 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
         s21_strncpy(str, tmp, len + 1);
         free(tmp);
       } else {
-        if (opt.fl_zero == 1 && opt.precision == -1) {
-          char *tmp = s21_insert(str, "0", 0);
+        if (opt.fl_zero == 1) {
+          char *tmp = s21_insert(str, "0", pos);
           s21_strncpy(str, tmp, len + 1);
           free(tmp);
         } else {

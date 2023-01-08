@@ -29,37 +29,16 @@ void run_all_testcases() {
 int main() {
   run_all_testcases();
 
-  // long int ui[] = {-21474836121248, -161, 0, 1365, 3563456, 214748361147};
+  // wchar_t c[] = {0, 12, 122, 255, 256, 1023, 2047, 2048, 8193, 65536, 65577};
   // char dest[100];
   // char s21_dest[100];
-  // const char *format = "aa bb % 0*.*li cc";
-  // int width = 8;
-  // int precision = 15;
-  // for (int i = 0; i < 6; i++) {
-  //   int s = sprintf(dest, format, width, precision, ui[i]);
-  //   int s21 = s21_sprintf(s21_dest, format, width, precision, ui[i]);
-  //   printf("ui = %li; s = %d; s21 = %d\n", ui[i], s, s21);
-  //   printf("    dest = %s;\ns21_dest = %s\n", dest, s21_dest);
+  // const char *format = "aa bb %lc cc";
+  // for (int i = 0; i < 11; i++) {
+  //   int s = sprintf(dest, format, c[i]);
+  //   int s21 = s21_sprintf(s21_dest, format, c[i]);
+  //   printf("c = %lc = %d, s = %d, s21 = %d\n", c[i], c[i], s, s21);
+  //   printf("    dest = %s\ns21_dest = %s\n", dest, s21_dest);
   // }
-
-  // char dest[64] = "\0";
-  // s21_sprintf_opt opt;
-  // s21_sprintf_opt_init(&opt);
-  // opt.width = 10;
-  // opt.precision = 5;
-  // opt.fl_plus = 0;
-  // opt.fl_minus = 0;
-  // int n = -10;
-  // s21_sprinter_int(dest, opt, n);
-  // printf("  n: %s\n", dest);
-
-  // char s21_dest[64] = "\0";
-  // s21_sprintf(s21_dest, "%*.*i", opt.width, opt.precision, n);
-  // printf("s21: %s\n", s21_dest);
-
-  // char sprintf_dest[64] = "\0";
-  // sprintf(sprintf_dest, "%*.*i", opt.width, opt.precision, n);
-  // printf(" sp: %s\n", sprintf_dest);
 
   return 0;
 }

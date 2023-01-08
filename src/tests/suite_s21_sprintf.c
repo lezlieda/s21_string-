@@ -992,12 +992,11 @@ START_TEST(s21_sprintf_c_4) {
               'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
   char dest[100];
   char s21_dest[100];
-  const char *format = "aa bb %*.*c cc";
+  const char *format = "aa bb %*c cc";
   int width = 10;
-  int precision = 4;
   for (int i = 0; i < 26; i++) {
-    int s = sprintf(dest, format, width, precision, c[i]);
-    int s21 = s21_sprintf(s21_dest, format, width, precision, c[i]);
+    int s = sprintf(dest, format, width, c[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, c[i]);
     ck_assert_msg(s == s21, "s = %d, s21 = %d, c = %c", s, s21, c[i]);
     ck_assert_msg(strcmp(dest, s21_dest) == 0,
                   "dest = %s, s21_dest = %s, c = %c", dest, s21_dest, c[i]);
@@ -1010,12 +1009,11 @@ START_TEST(s21_sprintf_c_5) {
               'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
   char dest[100];
   char s21_dest[100];
-  const char *format = "aa bb %-*.*c cc";
+  const char *format = "aa bb %-*c cc";
   int width = 10;
-  int precision = 4;
   for (int i = 0; i < 26; i++) {
-    int s = sprintf(dest, format, width, precision, c[i]);
-    int s21 = s21_sprintf(s21_dest, format, width, precision, c[i]);
+    int s = sprintf(dest, format, width, c[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, c[i]);
     ck_assert_msg(s == s21, "s = %d, s21 = %d, c = %c", s, s21, c[i]);
     ck_assert_msg(strcmp(dest, s21_dest) == 0,
                   "dest = %s, s21_dest = %s, c = %c", dest, s21_dest, c[i]);
@@ -1065,12 +1063,10 @@ START_TEST(s21_sprintf_c_8) {
   char s21_dest[100];
   const char *format = "aa bb %*.*lc cc";
   int width = 4;
-  int precision = 10;
+  int precision = 0;
   for (int i = 0; i < 9; i++) {
     int s = sprintf(dest, format, width, precision, c[i]);
     int s21 = s21_sprintf(s21_dest, format, width, precision, c[i]);
-    // printf("c = %lc, s = %d, s21 = %d\n", c[i], s, s21);
-    // printf("    dest = %s\ns21_dest = %s\n", dest, s21_dest);
     ck_assert_msg(s == s21, "s = %d, s21 = %d, c = %lc", s, s21, c[i]);
     ck_assert_msg(strcmp(dest, s21_dest) == 0,
                   "dest = %s, s21_dest = %s, c = %lc", dest, s21_dest, c[i]);

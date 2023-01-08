@@ -27,18 +27,16 @@ void run_all_testcases() {
 }
 
 int main() {
-  run_all_testcases();
+  // run_all_testcases();
 
-  // wchar_t c[] = {0, 12, 122, 255, 256, 1023, 2047, 2048, 8193, 65536, 65577};
-  // char dest[100];
-  // char s21_dest[100];
-  // const char *format = "aa bb %lc cc";
-  // for (int i = 0; i < 11; i++) {
-  //   int s = sprintf(dest, format, c[i]);
-  //   int s21 = s21_sprintf(s21_dest, format, c[i]);
-  //   printf("c = %lc = %d, s = %d, s21 = %d\n", c[i], c[i], s, s21);
-  //   printf("    dest = %s\ns21_dest = %s\n", dest, s21_dest);
-  // }
+  char srt[] = ";;;;;;;;;";
+  char dest[100];
+  char s21_dest[100];
+  const char *format = "aa bb %3.2s cc";
+  int s = sprintf(dest, format, srt);
+  int s21 = s21_sprintf(s21_dest, format, srt);
+  printf("s = %d\ns21 = %d\n", s, s21);
+  printf("    dest = %s\ns21_dest = %s\n", dest, s21_dest);
 
   return 0;
 }

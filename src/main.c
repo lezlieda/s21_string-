@@ -27,16 +27,22 @@ void run_all_testcases() {
 }
 
 int main() {
-  // run_all_testcases();
+  run_all_testcases();
 
-  char srt[] = ";;;;;;;;;";
-  char dest[100];
-  char s21_dest[100];
-  const char *format = "aa bb %3.2s cc";
-  int s = sprintf(dest, format, srt);
-  int s21 = s21_sprintf(s21_dest, format, srt);
-  printf("s = %d\ns21 = %d\n", s, s21);
-  printf("    dest = %s\ns21_dest = %s\n", dest, s21_dest);
+  // int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  // char dest[100];
+  // char s21_dest[100];
+  // const char *format = "aa bb %#o cc";
+  // int width = 16;
+
+  // for (int i = 0; i < 8; i++) {
+  //   int ret = sprintf(dest, format, width, val[i]);
+  //   int s21_ret = s21_sprintf(s21_dest, format, width, val[i]);
+  //   printf("val = %d, oval = %o, ret = %d, s21_ret = %d\n", val[i], val[i],
+  //   ret,
+  //          s21_ret);
+  //   printf("    dest = %s\ns21_dest = %s\n", dest, s21_dest);
+  // }
 
   return 0;
 }

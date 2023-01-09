@@ -36,18 +36,10 @@ void s21_strrev(char *str) {
 
 int s21_itoa(char *dest, long long int num, int base) {
   int i = 0;
-  int sign = 0;
-  if (num < 0) {
-    sign = 1;
-    num = -num;
-  }
   do {
     long long rem = num % base;
     dest[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
   } while (num /= base);
-  if (sign) {
-    dest[i++] = '-';
-  }
   dest[i] = '\0';
   s21_strrev(dest);
   return i;
@@ -327,15 +319,55 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
   } else {
     num = (unsigned int)c;
   }
-  len = s21_utoa(strptr, num, 10);  // формируем строку в str
+  int base = 0;
+  switch (opt.spec) {
+    case 'o':
+      base = 8;
+      break;
+    case 'x':
+      base = 16;
+      break;
+    case 'X':
+      base = 16;
+      break;
+    case 'u':
+      base = 10;
+      break;
+  }
+  len = s21_utoa(strptr, num, base);   // формируем строку в str
+  if (opt.fl_hash == 1 && num != 0) {  // флаг #
+    if (opt.spec == 'o') {
+      char *tmp = s21_insert(strptr, "0", 0);
+      s21_strncpy(strptr, tmp, len + 1);
+      len++;
+      free(tmp);
+    } else if (opt.spec == 'x' || opt.spec == 'X') {
+      char *tmp = s21_insert(strptr, "0x", 0);
+      s21_strncpy(strptr, tmp, len + 2);
+      len += 2;
+      free(tmp);
+    }
+  }
   if (opt.precision == 0 &&
       num == 0) {  // специальный случай, если точность 0 и число 0
     s21_strncpy(strptr, " ", 1);
   }
+  /***
+   * добавляем пробелы и нули
+   */
+  int pos = 0;  // смещение для добавления знаков
+  if ((opt.spec == 'x' || opt.spec == 'X') && opt.fl_hash == 1 && num != 0) {
+    pos = 2;
+  } else if (opt.spec == 'o' && opt.fl_hash == 1 && num != 0) {
+    pos = 1;
+  }
   if (opt.precision > len) {
-    int op = opt.precision - len;
+    int op = opt.precision - len + pos;
+    if (opt.spec == 'o' && opt.fl_hash == 1 && num != 0) {
+      op--;
+    }
     while (op-- > 0) {
-      char *tmp = s21_insert(str, "0", 0);
+      char *tmp = s21_insert(str, "0", pos);
       s21_strncpy(str, tmp, len + 1);
       free(tmp);
       len++;
@@ -350,7 +382,7 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
         free(tmp);
       } else {
         if (opt.fl_zero == 1 && opt.precision == -1) {
-          char *tmp = s21_insert(str, "0", 0);
+          char *tmp = s21_insert(str, "0", pos);
           s21_strncpy(str, tmp, len + 1);
           free(tmp);
         } else {
@@ -361,6 +393,11 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
       }
       len++;
     }
+  }
+  if (opt.spec == 'X') {
+    char *tmp = s21_to_upper(str);
+    s21_strncpy(str, tmp, len);
+    free(tmp);
   }
   s21_strncpy(dest, str, len);
   res = len;
@@ -609,6 +646,24 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
           } else {
             step = s21_sprinter_float(str, opt, va_arg(args, double));
           }
+          res += step;
+          str += step;
+          break;
+        case 'o':
+          step =
+              s21_sprinter_uint(str, opt, va_arg(args, unsigned long long int));
+          res += step;
+          str += step;
+          break;
+        case 'x':
+          step =
+              s21_sprinter_uint(str, opt, va_arg(args, unsigned long long int));
+          res += step;
+          str += step;
+          break;
+        case 'X':
+          step =
+              s21_sprinter_uint(str, opt, va_arg(args, unsigned long long int));
           res += step;
           str += step;
           break;

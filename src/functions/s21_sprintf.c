@@ -235,6 +235,7 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
   len = s21_itoa(strptr, num, 10);       // формируем строку
   if (opt.precision == 0 && num == 0) {  // специальный случай
     s21_strncpy(strptr, " ", 1);
+    len--;
   }
   /***
    * добавляем знаки
@@ -279,7 +280,7 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
         s21_strncpy(str, tmp, len + 1);
         free(tmp);
       } else {
-        if (opt.fl_zero == 1) {
+        if (opt.fl_zero == 1 && opt.precision == -1) {
           char *tmp = s21_insert(str, "0", pos);
           s21_strncpy(str, tmp, len + 1);
           free(tmp);
@@ -343,6 +344,7 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
   if (opt.precision == 0 &&
       num == 0) {  // специальный случай, если точность 0 и число 0
     s21_strncpy(strptr, " ", 1);
+    len--;
   }
   /***
    * добавляем пробелы и нули

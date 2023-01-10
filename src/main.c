@@ -27,17 +27,12 @@ void run_all_testcases() {
 }
 
 int main() {
-  run_all_testcases();
+  // run_all_testcases();
 
-  // wchar_t *c = L"lorem 中国人民共和国 ipsum";
-  // // char *c = "中国人民共和国";
-  // char dest[100];
-  // char s21_dest[100];
-  // const char *format = "aa bb %0-16.8ls cc";
-  // int s = sprintf(dest, format, c);
-  // int s21 = s21_sprintf(s21_dest, format, c);
-  // printf("c = %ls, s = %d, s21 = %d\n", c, s, s21);
-  // printf("    dest = %s\ns21_dest = %s\n", dest, s21_dest);
+  printf("LDBL_MANT_DIG = %d\n", LDBL_MANT_DIG);
+  printf("LDBL_MIN_EXP = %d\n", LDBL_MIN_EXP);
+  printf("LDBL_MAX_EXP = %d\n", LDBL_MAX_EXP);
+  printf("(int)sizeof(long double) = %d\n", (int)sizeof(long double));
 
   return 0;
 }

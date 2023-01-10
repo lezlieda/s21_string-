@@ -149,14 +149,6 @@ int s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args) {
   } else {
     opt->spec = '\0';
   }
-  // printf(
-  //     "opt->fl_minus = %d\nopt->fl_plus = %d\nopt->fl_space =
-  //     %d\nopt->fl_hash "
-  //     "= %d\nopt->fl_zero = %d\nopt->width = %d\nopt->precision = "
-  //     "%d\nopt->len_h = %d\nopt->len_l = %d\nopt->len_L = %d\nopt->spec =
-  //     %c\n", opt->fl_minus, opt->fl_plus, opt->fl_space, opt->fl_hash,
-  //     opt->fl_zero, opt->width, opt->precision, opt->len_h, opt->len_l,
-  //     opt->len_L, opt->spec);
   return res;
 }
 
@@ -404,8 +396,25 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
   return res;
 }
 
+size_t s21_wcslen(const wchar_t *s) {
+  size_t len = 0;
+  while (*s++ != L'\0') {
+    len++;
+  }
+  return len;
+}
+
+int s21_wstrToStr(char **dest, wchar_t *wstr) {
+  s21_size_t res = 0;
+  int wlen = 0;
+  wlen = s21_wcslen(wstr);
+  char *str = (char *)malloc(wlen * 4 + 1);
+  *dest = str;
+  res = wcstombs(str, wstr, wlen * 4 + 1);
+  return res;
+}
+
 int s21_sprinter_str(char *dest, s21_sprintf_opt opt, char *c) {
-  int res = 0;
   char str[8196] = "\0";
   // char *strptr = str;
   int len = 0;
@@ -414,6 +423,10 @@ int s21_sprinter_str(char *dest, s21_sprintf_opt opt, char *c) {
     len = opt.precision;  // длины строки - обрезаем строку до точности
   }
   s21_strncpy(str, c, len);
+  if (opt.precision == 0) {  // если точность 0 - строка пустая
+    s21_strncpy(str, "", 0);
+    len = 0;
+  }
   if (opt.width > len) {  // если ширина больше длины строки - добавляем пробелы
     int ow = opt.width - len;
     while (ow-- > 0) {
@@ -422,7 +435,11 @@ int s21_sprinter_str(char *dest, s21_sprintf_opt opt, char *c) {
         s21_strncpy(str, tmp, len + 1);
         free(tmp);
       } else {
-        char *tmp = s21_insert(str, " ", 0);
+        char ins[2] = " ";
+        if (opt.fl_zero == 1) {
+          ins[0] = '0';
+        }
+        char *tmp = s21_insert(str, ins, 0);
         s21_strncpy(str, tmp, len + 1);
         free(tmp);
       }
@@ -430,9 +447,7 @@ int s21_sprinter_str(char *dest, s21_sprintf_opt opt, char *c) {
     }
   }
   s21_strncpy(dest, str, len);
-  res = len;
-
-  return res;
+  return len;
 }
 
 long double s21_pow(int a, int b) {
@@ -612,6 +627,7 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
       s21_sprintf_opt_init(&opt);
       step = s21_opt_parse(format, &opt, args) - 1;
       format += step;
+      char *tmp;
       switch (opt.spec) {
         case 'c':
           step = s21_sprinter_char(str, opt, va_arg(args, int));
@@ -635,7 +651,13 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
           str += step;
           break;
         case 's':
-          step = s21_sprinter_str(str, opt, va_arg(args, char *));
+          if (opt.len_l == 1) {
+            s21_wstrToStr(&tmp, va_arg(args, wchar_t *));
+            step = s21_sprinter_str(str, opt, tmp);
+            free(tmp);
+          } else {
+            step = s21_sprinter_str(str, opt, va_arg(args, char *));
+          }
           res += step;
           str += step;
           break;

@@ -29,19 +29,42 @@ void run_all_testcases() {
 int main() {
   run_all_testcases();
 
-  // int ui[] = {-2147483647, -10, 0, 1, 10, 2147483647};
+  // int val[] = {-100, 0, 1, 10, 100, 1000};
   // char dest[100];
   // char s21_dest[100];
-  // const char *format = "aa bb %*.*i cc";
-  // int width[] = {0, 1, 4, 88};
-  // int precision[] = {0, 1, 4, 16};
+  // int width[] = {0, 1, 10, 20};
+  // int precision[] = {0, 1, 10, 20};
+  // const char *format = "aa bb %*.*p cc%n";
+  // int n, s21_n;
   // for (int i = 0; i < 6; i++) {
-  //   for (int k = 0; k < 4; k++) {
-  //     for (int j = 0; j < 4; j++) {
-  //       int s = sprintf(dest, format, width[k], precision[j], ui[i]);
-  //       int s21 = s21_sprintf(s21_dest, format, width[k], precision[j],
-  //       ui[i]); printf("s = %d, s21 = %d\n", s, s21); printf("s = %d; dest =
-  //       %s\n", s, dest); printf("s21_dest = %s\n", s21_dest);
+  //   for (int j = 0; j < 4; j++) {
+  //     for (int k = 0; k < 4; k++) {
+  //       int s = sprintf(dest, format, width[j], precision[k], &val[i], &n);
+  //       int s21 = s21_sprintf(s21_dest, format, width[j], precision[k],
+  //       &val[i],
+  //                             &s21_n);
+  //       printf("s = %d, s21 = %d\n", s, s21);
+  //       printf("    dest = %s\ns21_dest = %s\n", dest, s21_dest);
+  //       printf("n = %d; s21_n = %d\n", n, s21_n);
+  //     }
+  //   }
+  // }
+
+  // double val[] = {1.9e22, 123.321, 0.0, -123.321, -1.9e22};
+  // // int val[] = {-100, 0, 1, 10, 100, 1000};
+  // char dest[100];
+  // char s21_dest[100];
+  // const char *format = "aa bb %*.*p cc";
+  // int width[] = {0, 1, 10, 20};
+  // int precision[] = {0, 1, 10, 20};
+  // for (int i = 0; i < 5; i++) {
+  //   for (int j = 0; j < 4; j++) {
+  //     for (int k = 0; k < 4; k++) {
+  //       int s = sprintf(dest, format, width[j], precision[k], &val[i]);
+  //       int s21 =
+  //           s21_sprintf(s21_dest, format, width[j], precision[k], &val[i]);
+  //       printf("s = %d, s21 = %d\n", s, s21);
+  //       printf("    dest = %s\ns21_dest = %s\n", dest, s21_dest);
   //     }
   //   }
   // }

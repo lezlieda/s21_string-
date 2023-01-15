@@ -48,10 +48,10 @@ int s21_itoa(char *dest, long long int num, int base) {
   return i;
 }
 
-int s21_utoa(char *dest, unsigned long long int num, int base) {
+int s21_utoa(char *dest, unsigned long long num, int base) {
   int i = 0;
   do {
-    unsigned long long rem = num % base;
+    unsigned long long rem = (unsigned long long)num % base;
     dest[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
   } while (num /= base);
   dest[i] = '\0';
@@ -306,7 +306,7 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
   unsigned long long int num = 0;
   if (opt.len_h == 1) {  // устанавливаем длину int в зависимости от флага
     num = (unsigned short int)c;
-  } else if (opt.len_l == 1) {
+  } else if (opt.len_l == 1 || opt.spec == 'p') {
     num = (unsigned long int)c;
   } else {
     num = (unsigned int)c;
@@ -325,6 +325,9 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
     case 'u':
       base = 10;
       break;
+    case 'p':
+      base = 16;
+      break;
   }
   len = s21_utoa(strptr, num, base);   // формируем строку в str
   if (opt.fl_hash == 1 && num != 0) {  // флаг #
@@ -340,6 +343,13 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
       free(tmp);
     }
   }
+  if (opt.spec == 'p') {
+    char *tmp = s21_insert(strptr, "0x", 0);
+    s21_strncpy(strptr, tmp, len + 2);
+    len += 2;
+    free(tmp);
+  }
+
   if (opt.precision == 0 &&
       num == 0) {  // специальный случай, если точность 0 и число 0
     s21_strncpy(strptr, " ", 1);
@@ -349,7 +359,8 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
    * добавляем пробелы и нули
    */
   int pos = 0;  // смещение для добавления знаков
-  if ((opt.spec == 'x' || opt.spec == 'X') && opt.fl_hash == 1 && num != 0) {
+  if (((opt.spec == 'x' || opt.spec == 'X') && opt.fl_hash == 1 && num != 0) ||
+      opt.spec == 'p') {
     pos = 2;
   } else if (opt.spec == 'o' && opt.fl_hash == 1 && num != 0) {
     pos = 1;
@@ -410,7 +421,6 @@ int s21_wstrToStr(char **dest, wchar_t *wstr) {
   char *str = (char *)malloc(wlen * 4 + 1);
   *dest = str;
   res = wcstombs(str, wstr, wlen * 4 + 1);
-
   return res;
 }
 
@@ -703,16 +713,25 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
           res += step;
           str += step;
           break;
+        // case 'e':
+        // case 'E':
         // case 'f':
+        // case 'g':
+        // case 'G':
         //   if (opt.len_L == 1) {
-        //     // step = s21_sprinter_float_L(str, opt, va_arg(args, long
-        //     // double));
+        //     step = s21_sprinter_float_L(str, opt, va_arg(args, long double));
         //   } else {
         //     step = s21_sprinter_float(str, opt, va_arg(args, double));
         //   }
         //   res += step;
         //   str += step;
         //   break;
+        case 'p':
+          step = s21_sprinter_uint(str, opt,
+                                   (unsigned long long)va_arg(args, void *));
+          res += step;
+          str += step;
+          break;
         case 'o':
           step =
               s21_sprinter_uint(str, opt, va_arg(args, unsigned long long int));
@@ -730,6 +749,9 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
               s21_sprinter_uint(str, opt, va_arg(args, unsigned long long int));
           res += step;
           str += step;
+          break;
+        case 'n':
+          *va_arg(args, int *) = res;
           break;
         default:
           break;

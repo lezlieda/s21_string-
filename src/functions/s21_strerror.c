@@ -8,6 +8,5 @@ char *s21_strerror(int errnum) {
   } else {
     s21_sprintf(result, "%s", err_list[errnum]);
   }
-
   return result;
 }

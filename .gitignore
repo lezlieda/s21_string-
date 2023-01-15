@@ -9,5 +9,7 @@ src/*.html
 src/*.css
 src/a.out
 src/a.c
-src/copy a
+src/copy*
 src/functions/copy
+src/functions/s21_frexp.c
+src/functions/a.out

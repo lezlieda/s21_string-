@@ -27,12 +27,29 @@ void run_all_testcases() {
 }
 
 int main() {
-  // run_all_testcases();
+  run_all_testcases();
 
-  printf("LDBL_MANT_DIG = %d\n", LDBL_MANT_DIG);
-  printf("LDBL_MIN_EXP = %d\n", LDBL_MIN_EXP);
-  printf("LDBL_MAX_EXP = %d\n", LDBL_MAX_EXP);
-  printf("(int)sizeof(long double) = %d\n", (int)sizeof(long double));
+  // int ui[] = {-2147483647, -10, 0, 1, 10, 2147483647};
+  // char dest[100];
+  // char s21_dest[100];
+  // const char *format = "aa bb %*.*i cc";
+  // int width[] = {0, 1, 4, 88};
+  // int precision[] = {0, 1, 4, 16};
+  // for (int i = 0; i < 6; i++) {
+  //   for (int k = 0; k < 4; k++) {
+  //     for (int j = 0; j < 4; j++) {
+  //       int s = sprintf(dest, format, width[k], precision[j], ui[i]);
+  //       int s21 = s21_sprintf(s21_dest, format, width[k], precision[j],
+  //       ui[i]); printf("s = %d, s21 = %d\n", s, s21); printf("s = %d; dest =
+  //       %s\n", s, dest); printf("s21_dest = %s\n", s21_dest);
+  //     }
+  //   }
+  // }
+
+  // printf("LDBL_MANT_DIG = %d\n", LDBL_MANT_DIG);
+  // printf("LDBL_MIN_EXP = %d\n", LDBL_MIN_EXP);
+  // printf("LDBL_MAX_EXP = %d\n", LDBL_MAX_EXP);
+  // printf("(int)sizeof(long double) = %d\n", (int)sizeof(long double));
 
   return 0;
 }

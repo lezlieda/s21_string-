@@ -209,7 +209,7 @@ START_TEST(s21_sprintf_i_1) {
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %*.*i cc";
-  int width[] = {0, 1, 4, 16};
+  int width[] = {0, 1, 4, 88};
   int precision[] = {0, 1, 4, 16};
   for (int i = 0; i < 6; i++) {
     for (int k = 0; k < 4; k++) {

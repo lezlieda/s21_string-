@@ -37,17 +37,6 @@ void s21_strrev(char *str) {
   }
 }
 
-int s21_itoa(char *dest, long long int num, int base) {
-  int i = 0;
-  do {
-    long long rem = num % base;
-    dest[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
-  } while (num /= base);
-  dest[i] = '\0';
-  s21_strrev(dest);
-  return i;
-}
-
 int s21_utoa(char *dest, unsigned long long num, int base) {
   int i = 0;
   do {
@@ -204,8 +193,12 @@ int s21_sprinter_char(char *dest, s21_sprintf_opt opt, int c) {
           res++;
         }
       } else {
+        char ins = ' ';
+        if (opt.fl_zero == 1) {
+          ins = '0';
+        }
         for (int i = 1; i < opt.width; i++) {
-          s21_putch(&dest, ' ');
+          s21_putch(&dest, ins);
           res++;
         }
         s21_putch(&dest, sym);
@@ -226,7 +219,7 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
   if (opt.len_h == 1) {  // устанавливаем длину int в зависимости от флага
     num = (short int)num;
   } else if (opt.len_l == 1) {
-    num = (long int)num;
+    num = (long long int)num;
   } else {
     num = (int)num;
   }
@@ -234,7 +227,7 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
     sign = 1;
     num = -num;
   }
-  len = s21_itoa(strptr, num, 10);       // формируем строку
+  len = s21_utoa(strptr, num, 10);       // формируем строку
   if (opt.precision == 0 && num == 0) {  // специальный случай
     s21_strncpy(strptr, " ", 1);
     len--;
@@ -343,17 +336,17 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
       free(tmp);
     }
   }
-  if (opt.spec == 'p') {
-    char *tmp = s21_insert(strptr, "0x", 0);
-    s21_strncpy(strptr, tmp, len + 2);
-    len += 2;
-    free(tmp);
-  }
 
   if (opt.precision == 0 &&
       num == 0) {  // специальный случай, если точность 0 и число 0
     s21_strncpy(strptr, " ", 1);
     len--;
+  }
+  if (opt.spec == 'p') {
+    char *tmp = s21_insert(strptr, "0x", 0);
+    s21_strncpy(strptr, tmp, len + 2);
+    len += 2;
+    free(tmp);
   }
   /***
    * добавляем пробелы и нули
@@ -365,7 +358,7 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
   } else if (opt.spec == 'o' && opt.fl_hash == 1 && num != 0) {
     pos = 1;
   }
-  if (opt.precision > len) {
+  if (opt.precision > len - pos) {
     int op = opt.precision - len + pos;
     if (opt.spec == 'o' && opt.fl_hash == 1 && num != 0) {
       op--;
@@ -427,6 +420,9 @@ int s21_wstrToStr(char **dest, wchar_t *wstr) {
 int s21_sprinter_str(char *dest, s21_sprintf_opt opt, char *c) {
   char *strptr = dest;
   int len = 0;
+  if (c == NULL) {
+    c = "(null)";
+  }
   len = s21_strlen(c);
   if (opt.precision < len && opt.precision != -1) {  // если точность меньше
     len = opt.precision;  // длины строки - обрезаем строку до точности

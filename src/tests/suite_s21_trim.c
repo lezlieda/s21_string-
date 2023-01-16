@@ -64,6 +64,24 @@ START_TEST(s21_trim_7) {
 }
 END_TEST
 
+START_TEST(s21_trim_8) {
+  char *src = NULL;
+  char *trim_chars = NULL;
+  char *res = s21_trim(src, trim_chars);
+  ck_assert_ptr_null(res);
+  if (res != NULL) free(res);
+}
+END_TEST
+
+START_TEST(s21_trim_9) {
+  char *src = "Hello, world!";
+  char *trim_chars = "";
+  char *res = s21_trim(src, trim_chars);
+  ck_assert_str_eq(res, "Hello, world!");
+  if (res != NULL) free(res);
+}
+END_TEST
+
 Suite *suite_s21_trim() {
   Suite *suite = suite_create("s21_trim");
   TCase *tcase = tcase_create("case_s21_trim");
@@ -75,6 +93,8 @@ Suite *suite_s21_trim() {
   tcase_add_test(tcase, s21_trim_5);
   tcase_add_test(tcase, s21_trim_6);
   tcase_add_test(tcase, s21_trim_7);
+  tcase_add_test(tcase, s21_trim_8);
+  tcase_add_test(tcase, s21_trim_9);
 
   suite_add_tcase(suite, tcase);
   return suite;

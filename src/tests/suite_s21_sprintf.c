@@ -580,6 +580,23 @@ START_TEST(s21_sprintf_c_8) {
 }
 END_TEST
 
+START_TEST(s21_sprintf_c_9) {
+  char c[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+              'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+  char dest[100];
+  char s21_dest[100];
+  const char *format = "aa bb %0*.c cc";
+  int width = 10;
+  for (int i = 0; i < 26; i++) {
+    int s = sprintf(dest, format, width, c[i]);
+    int s21 = s21_sprintf(s21_dest, format, width, c[i]);
+    ck_assert_msg(s == s21, "s = %d, s21 = %d, c = %c", s, s21, c[i]);
+    ck_assert_msg(strcmp(dest, s21_dest) == 0,
+                  "dest = %s, s21_dest = %s, c = %c", dest, s21_dest, c[i]);
+  }
+}
+END_TEST
+
 START_TEST(s21_sprintf_o_1) {
   int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
   char dest[100];
@@ -1169,6 +1186,7 @@ Suite *suite_s21_sprintf() {
   tcase_add_test(tc_core, s21_sprintf_c_6);
   tcase_add_test(tc_core, s21_sprintf_c_7);
   tcase_add_test(tc_core, s21_sprintf_c_8);
+  tcase_add_test(tc_core, s21_sprintf_c_9);
 
   tcase_add_test(tc_core, s21_sprintf_s_1);
   tcase_add_test(tc_core, s21_sprintf_s_2);

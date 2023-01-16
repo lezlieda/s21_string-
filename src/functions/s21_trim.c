@@ -17,8 +17,10 @@ void *s21_trim(const char *src, const char *trim_chars) {
       src++;
     }
     p--;
-    while (s21_is_delim(*p, trim_chars)) {
-      p--;  // пропускаем все разделители в конце строки
+    if (*trim_chars != '\0') {
+      while (s21_is_delim(*p, trim_chars)) {
+        p--;  // пропускаем все разделители в конце строки
+      }
     }
     p++;
     *p = '\0';  // ставим терминатор

@@ -41,6 +41,6 @@ gcov_report:
 	gcovr -r . --html --html-details -o report.html
 
 clean:
-	rm -rf *.o *.a test *.gcda *.gcno *.gcov *.html *.css *.out
+	rm -rf *.o *.a test tgtests *.gcda *.gcno *.gcov *.html *.css *.out
 
 rebuild: clean all

@@ -32,11 +32,11 @@ void run_all_testcases() {
 int main() {
   // run_all_testcases();
 
-  double d = 3.1415926e42;
+  double d = 123456.78;
 
   char buf[8192];
   char s21_buf[8192];
-  const char *format = "aa bb %.32f cc";
+  const char *format = "aa bb %.12f cc";
   sprintf(buf, format, d);
   s21_sprintf(s21_buf, format, d);
   printf("    buf = %s\n", buf);

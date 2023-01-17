@@ -1,8 +1,5 @@
 #include "../s21_string.h"
 
-#define S21_CONCAT2(a, b) a##b
-#define S21_CONCAT(a, b) S21_CONCAT2(a, b)
-
 void s21_sprintf_opt_init(s21_sprintf_opt *opt) {
   opt->fl_minus = -1;
   opt->fl_plus = -1;
@@ -497,11 +494,10 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
       range++;
     }
     if (range == 0) range = 1;
+    if (opt.precision == 0 && fracpart > 0.5) intpart++;
     while (range-- > 0) {
       int d = intpart / s21_pow(10, range);
-      printf("d: %d\n", d);
       intpart -= (double)d * s21_pow(10, range);
-      printf("intpart: %f\n", intpart);
       char num[2];
       s21_utoa(num, d, 10);
       char *tmp = s21_insert(strptr, num, len);
@@ -517,12 +513,12 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
       len++;
       while (opt.precision-- > 0) {
         fracpart *= 10;
-        int d = opt.precision == 0 ? (int)(fracpart + 0.5) : (int)fracpart;
+        int d =
+            opt.precision == 0 ? (int)(fracpart + 0.5) : (int)(fracpart + .01);
+        fracpart = modf(fracpart, &intpart);
         if (d == 10) {
           d = 0;
-          fracpart = 0;
         }
-        fracpart = modf(fracpart, &intpart);
         char num[2];
         s21_utoa(num, d, 10);
         char *tmp = s21_insert(strptr, num, len);
@@ -535,6 +531,7 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
   /***
    * добавляем знаки
    */
+  int pos = 0;
   if (sign == 1 || opt.fl_plus == 1 || opt.fl_space == 1) {
     char fl[2] = "\0";
     if (sign == 1) {
@@ -556,33 +553,67 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
     s21_strncpy(strptr, tmp, s21_strlen(tmp));
     free(tmp);
     len++;
+    pos++;
   }
-  /***
-   * добавляем пробелы или нули
-   */
+  if (opt.precision > len - pos) {
+    int op = opt.precision - len + pos;
+    if (opt.spec == 'o' && opt.fl_hash == 1 && num != 0) {
+      op--;
+    }
+    while (op-- > 0) {
+      char *tmp = s21_insert(strptr, "0", pos);
+      s21_strncpy(strptr, tmp, len + 1);
+      free(tmp);
+      len++;
+    }
+  }
   if (opt.width > len) {
     int ow = opt.width - len;
     while (ow-- > 0) {
       if (opt.fl_minus == 1) {
         char *tmp = s21_insert(strptr, " ", len);
-        s21_strncpy(strptr, tmp, s21_strlen(tmp));
+        s21_strncpy(strptr, tmp, len + 1);
         free(tmp);
       } else {
-        if (opt.fl_zero == 1 && !flag) {
-          int pos = 0;
-          if (sign == 1 || opt.fl_plus == 1 || opt.fl_space == 1) pos = 1;
+        if (opt.fl_zero == 1 && opt.precision == -1) {
           char *tmp = s21_insert(strptr, "0", pos);
-          s21_strncpy(strptr, tmp, s21_strlen(tmp));
+          s21_strncpy(strptr, tmp, len + 1);
           free(tmp);
         } else {
           char *tmp = s21_insert(strptr, " ", 0);
-          s21_strncpy(strptr, tmp, s21_strlen(tmp));
+          s21_strncpy(strptr, tmp, len + 1);
           free(tmp);
         }
       }
       len++;
     }
   }
+  /***
+   * добавляем пробелы или нули
+   */
+  // if (opt.width > len) {
+  //   int ow = opt.width - len;
+  //   while (ow-- > 0) {
+  //     if (opt.fl_minus == 1) {
+  //       char *tmp = s21_insert(strptr, " ", len);
+  //       s21_strncpy(strptr, tmp, s21_strlen(tmp));
+  //       free(tmp);
+  //     } else {
+  //       if (opt.fl_zero == 1 && !flag) {
+  //         int pos = 0;
+  //         if (sign == 1 || opt.fl_plus == 1 || opt.fl_space == 1) pos = 1;
+  //         char *tmp = s21_insert(strptr, "0", pos);
+  //         s21_strncpy(strptr, tmp, s21_strlen(tmp));
+  //         free(tmp);
+  //       } else {
+  //         char *tmp = s21_insert(strptr, " ", 0);
+  //         s21_strncpy(strptr, tmp, s21_strlen(tmp));
+  //         free(tmp);
+  //       }
+  //     }
+  //     len++;
+  //   }
+  // }
   return len;
 }
 

@@ -1,6 +1,9 @@
 #include "s21_string.h"
 #include "suitecases.h"
 
+#define S21_CONCAT2(a, b) a##b
+#define S21_CONCAT(a, b) S21_CONCAT2(a, b)
+
 void run_testcase(Suite *testcase) {
   SRunner *runner = srunner_create(testcase);
   srunner_run_all(runner, CK_NORMAL);
@@ -27,7 +30,17 @@ void run_all_testcases() {
 }
 
 int main() {
-  run_all_testcases();
+  // run_all_testcases();
+
+  double d = 3.1415926e42;
+
+  char buf[8192];
+  char s21_buf[8192];
+  const char *format = "aa bb %.32f cc";
+  sprintf(buf, format, d);
+  s21_sprintf(s21_buf, format, d);
+  printf("    buf = %s\n", buf);
+  printf("s21_buf = %s\n", s21_buf);
 
   return 0;
 }

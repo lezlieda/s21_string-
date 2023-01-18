@@ -392,9 +392,6 @@ START_TEST(s21_sprintf_i_9) {
       for (int j = 0; j < 4; j++) {
         int s = sprintf(dest, format, width[k], precision[j], ui[i]);
         int s21 = s21_sprintf(s21_dest, format, width[k], precision[j], ui[i]);
-        // printf("width = %d, precision = %d, ui = %li, s = %d, s21 = %d\n",
-        //        width[k], precision[j], ui[i], s, s21);
-        // printf("dest = %s, s21_dest = %s\n", dest, s21_dest);
         ck_assert_msg(s == s21, "s = %d, s21 = %d, ui = %li", s, s21, ui[i]);
         ck_assert_msg(strcmp(dest, s21_dest) == 0,
                       "dest = %s, s21_dest = %s, ui = %li", dest, s21_dest,
@@ -528,15 +525,14 @@ START_TEST(s21_sprintf_c_5) {
 END_TEST
 
 START_TEST(s21_sprintf_c_6) {
-  wchar_t c[] = {0, 12, 123, 1234, 12345, 32132, 33333, 66666, 99999};
+  setlocale(LC_ALL, "");
+  wint_t c[] = {L' ', L'd', L'å', L'ä', L'ö', L'Å', L'綄', L'Ö', L'舵'};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %lc cc";
   for (int i = 0; i < 9; i++) {
     int s = sprintf(dest, format, c[i]);
     int s21 = s21_sprintf(s21_dest, format, c[i]);
-    // printf("c = %lc, s = %d, s21 = %d\n", c[i], s, s21);
-    // printf("    dest = %s\ns21_dest = %s\n", dest, s21_dest);
     ck_assert_msg(s == s21, "s = %d, s21 = %d, c = %lc", s, s21, c[i]);
     ck_assert_msg(strcmp(dest, s21_dest) == 0,
                   "dest = %s, s21_dest = %s, c = %lc", dest, s21_dest, c[i]);
@@ -545,7 +541,7 @@ START_TEST(s21_sprintf_c_6) {
 END_TEST
 
 START_TEST(s21_sprintf_c_7) {
-  wchar_t c[] = {0, 12, 123, 1234, 12345, 32132, 33333, 66666, 99999};
+  wint_t c[] = {0, 12, 123, 1234, 12345, 32132, 33333, 66666, 99999};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %-*.*lc cc";
@@ -554,8 +550,6 @@ START_TEST(s21_sprintf_c_7) {
   for (int i = 0; i < 9; i++) {
     int s = sprintf(dest, format, width, precision, c[i]);
     int s21 = s21_sprintf(s21_dest, format, width, precision, c[i]);
-    // printf("c = %lc, s = %d, s21 = %d\n", c[i], s, s21);
-    // printf("    dest = %s\ns21_dest = %s\n", dest, s21_dest);
     ck_assert_msg(s == s21, "s = %d, s21 = %d, c = %lc", s, s21, c[i]);
     ck_assert_msg(strcmp(dest, s21_dest) == 0,
                   "dest = %s, s21_dest = %s, c = %lc", dest, s21_dest, c[i]);
@@ -564,7 +558,7 @@ START_TEST(s21_sprintf_c_7) {
 END_TEST
 
 START_TEST(s21_sprintf_c_8) {
-  wchar_t c[] = {0, 12, 123, 1234, 12345, 32132, 33333, 66666, 99999};
+  wint_t c[] = {0, 12, 123, 1234, 12345, 32132, 33333, 66666, 99999};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %*.*lc cc";
@@ -735,11 +729,9 @@ START_TEST(s21_sprintf_x_2) {
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %1.2x cc";
-  int width = 10;
-  int precision = 5;
   for (int i = 0; i < 8; i++) {
-    int s = sprintf(dest, format, width, precision, val[i]);
-    int s21 = s21_sprintf(s21_dest, format, width, precision, val[i]);
+    int s = sprintf(dest, format, val[i]);
+    int s21 = s21_sprintf(s21_dest, format, val[i]);
     ck_assert_msg(s == s21, "s = %d, s21 = %d, val = %x", s, s21, val[i]);
     ck_assert_msg(strcmp(dest, s21_dest) == 0,
                   "dest = %s, s21_dest = %s, val = %x", dest, s21_dest, val[i]);
@@ -853,11 +845,9 @@ START_TEST(s21_sprintf_X_2) {
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %1.2X cc";
-  int width = 10;
-  int precision = 5;
   for (int i = 0; i < 8; i++) {
-    int s = sprintf(dest, format, width, precision, val[i]);
-    int s21 = s21_sprintf(s21_dest, format, width, precision, val[i]);
+    int s = sprintf(dest, format, val[i]);
+    int s21 = s21_sprintf(s21_dest, format, val[i]);
     ck_assert_msg(s == s21, "s = %d, s21 = %d, val = %X", s, s21, val[i]);
     ck_assert_msg(strcmp(dest, s21_dest) == 0,
                   "dest = %s, s21_dest = %s, val = %X", dest, s21_dest, val[i]);

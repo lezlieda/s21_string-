@@ -5,7 +5,7 @@ START_TEST(s21_strncpy_1) {
   char src[64] = "Lorem ipsum";
   char dest[64] = "\0";
   char s21_dest[64] = "\0";
-  ck_assert_str_eq(strncpy(dest, src, 64), s21_strncpy(s21_dest, src, 64));
+  ck_assert_str_eq(strncpy(dest, src, 63), s21_strncpy(s21_dest, src, 63));
 }
 END_TEST
 
@@ -29,7 +29,7 @@ START_TEST(s21_strncpy_4) {
   char src[64] = "Lorem ipsum";
   char dest[64] = "dolor sit amet";
   char s21_dest[64] = "dolor sit amet";
-  ck_assert_str_eq(strncpy(dest, src, 64), s21_strncpy(s21_dest, src, 64));
+  ck_assert_str_eq(strncpy(dest, src, 63), s21_strncpy(s21_dest, src, 63));
 }
 END_TEST
 
@@ -53,7 +53,7 @@ START_TEST(s21_strncpy_7) {
   char src[64] = "\0";
   char dest[64] = "\0";
   char s21_dest[64] = "\0";
-  ck_assert_str_eq(strncpy(dest, src, 64), s21_strncpy(s21_dest, src, 64));
+  ck_assert_str_eq(strncpy(dest, src, 63), s21_strncpy(s21_dest, src, 63));
 }
 END_TEST
 
@@ -77,7 +77,7 @@ START_TEST(s21_strncpy_10) {
   char src[64] = "\0";
   char dest[64] = "dolor sit amet";
   char s21_dest[64] = "dolor sit amet";
-  ck_assert_str_eq(strncpy(dest, src, 64), s21_strncpy(s21_dest, src, 64));
+  ck_assert_str_eq(strncpy(dest, src, 63), s21_strncpy(s21_dest, src, 63));
 }
 END_TEST
 
@@ -101,7 +101,7 @@ START_TEST(s21_strncpy_13) {
   char src[16] = "Lorem ipsum";
   char dest[16] = "\0";
   char s21_dest[16] = "\0";
-  ck_assert_str_eq(strncpy(dest, src, 16), s21_strncpy(s21_dest, src, 16));
+  ck_assert_str_eq(strncpy(dest, src, 15), s21_strncpy(s21_dest, src, 15));
 }
 END_TEST
 

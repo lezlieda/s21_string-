@@ -224,9 +224,7 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
     s21_strncpy(strptr, " ", 1);
     len--;
   }
-  /***
-   * добавляем знаки
-   */
+  /***  добавляем знаки  ***/
   int pos = 0;  // смещение для добавления знаков
   if (sign == 1) {
     char *tmp = s21_insert(strptr, "-", 0);
@@ -247,9 +245,7 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
     len++;
     pos++;
   }
-  /***
-   * добавляем пробелы и нули
-   */
+  /***  добавляем пробелы и нули  ***/
   if (opt.precision > len - 1) {  // добавляем нули
     int op = opt.precision - len + pos;
     while (op-- > 0) {
@@ -339,7 +335,7 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
     len += 2;
     free(tmp);
   }
-  // добавляем пробелы и нули
+  /***  добавляем пробелы и нули  ***/
   int pos = 0;  // смещение для добавления знаков
   if (((opt.spec == 'x' || opt.spec == 'X') && opt.fl_hash == 1 && num != 0) ||
       opt.spec == 'p') {
@@ -461,7 +457,6 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
   if (c != c) {  // специальные значения
     flag = 1;
     opt.precision = 0;
-    // if (opt.width < 3) opt.width = 3;
   } else if (c == INFINITY) {
     flag = 2;
     opt.precision = 0;
@@ -473,9 +468,7 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
     sign = 1;
     num = -num;
   }
-  /***
-   * записываем число в строку
-   */
+  /***  записываем число в строку  ***/
   if (flag == 1) {
     s21_strncpy(strptr, "nan", 3);
     len = 3;
@@ -483,7 +476,7 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
     s21_strncpy(strptr, "inf", 3);
     len = 3;
   } else {
-    // записываем целую часть
+    /***  записываем целую часть  ***/
     double intpart = 0;
     double fracpart = modf(num, &intpart);
     double rcount = intpart;
@@ -504,7 +497,7 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
       free(tmp);
       len++;
     }
-    // записываем дробную часть
+    /***  записываем дробную часть  ***/
     if (opt.precision > 0 || opt.fl_hash == 1) {
       char *tmp = s21_insert(strptr, ".", len);
       s21_strncpy(strptr, tmp, len + 1);
@@ -524,9 +517,7 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
       }
     }
   }
-  /***
-   * добавляем знаки
-   */
+  /***  добавляем знаки  ***/
   int pos = 0;
   if (sign == 1 || opt.fl_plus == 1 || opt.fl_space == 1) {
     char fl[2] = "\0";
@@ -615,12 +606,6 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
           res += step;
           str += step;
           break;
-        case 'u':
-          step =
-              s21_sprinter_uint(str, opt, va_arg(args, unsigned long long int));
-          res += step;
-          str += step;
-          break;
         case 's':
           if (opt.len_l == 1) {
             s21_wstrToStr(&tmp, va_arg(args, wchar_t *));
@@ -637,27 +622,13 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
           res += step;
           str += step;
           break;
+        case 'u':
         case 'p':
+        case 'o':
+        case 'x':
+        case 'X':
           step = s21_sprinter_uint(str, opt,
                                    (unsigned long long)va_arg(args, void *));
-          res += step;
-          str += step;
-          break;
-        case 'o':
-          step =
-              s21_sprinter_uint(str, opt, va_arg(args, unsigned long long int));
-          res += step;
-          str += step;
-          break;
-        case 'x':
-          step =
-              s21_sprinter_uint(str, opt, va_arg(args, unsigned long long int));
-          res += step;
-          str += step;
-          break;
-        case 'X':
-          step =
-              s21_sprinter_uint(str, opt, va_arg(args, unsigned long long int));
           res += step;
           str += step;
           break;

@@ -42,6 +42,7 @@ gcov_report:
 
 check:
 	cppcheck --enable=all --inconclusive --std=c11 --suppress=missingIncludeSystem ./
+	clang-format -n *.c *.h
 
 clean:
 	rm -rf *.o *.a test tgtests *.gcda *.gcno *.gcov *.html *.css *.out

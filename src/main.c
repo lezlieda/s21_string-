@@ -1,9 +1,6 @@
 #include "s21_string.h"
 #include "suitecases.h"
 
-#define S21_CONCAT2(a, b) a##b
-#define S21_CONCAT(a, b) S21_CONCAT2(a, b)
-
 void run_testcase(Suite *testcase) {
   SRunner *runner = srunner_create(testcase);
   srunner_run_all(runner, CK_NORMAL);
@@ -32,12 +29,5 @@ void run_all_testcases() {
 int main() {
   run_all_testcases();
 
-  // double a = 123.456e33;
-  // char out[100];
-  // sprintf(out, "% ", a);
-  // printf("%s\n", out);
-
   return 0;
 }
-
-// 中国人民共国华

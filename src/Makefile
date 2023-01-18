@@ -40,6 +40,9 @@ gcov_report:
 	# gcov s21*.gcda
 	gcovr -r . --html --html-details -o report.html
 
+check:
+	cppcheck --enable=all --inconclusive --std=c11 --suppress=missingIncludeSystem ./
+
 clean:
 	rm -rf *.o *.a test tgtests *.gcda *.gcno *.gcov *.html *.css *.out
 

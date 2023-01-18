@@ -12,9 +12,7 @@ void *s21_trim(const char *src, const char *trim_chars) {
       src++;  // пропускаем все разделители в начале строки
     }
     while (*src != '\0') {
-      *p = *src;  // копируем строку
-      p++;
-      src++;
+      *p++ = *src++;  // копируем строку
     }
     p--;
     if (*trim_chars != '\0') {

@@ -11,5 +11,5 @@ src/a.out
 src/a.c
 src/copy*
 src/functions/copy
-src/functions/s21_frexp.c
+src/s21_frexp.c
 src/functions/a.out

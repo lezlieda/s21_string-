@@ -7,7 +7,8 @@ void *s21_memchr(const void *str, int c, s21_size_t n) {
       flag = 1;
       break;
     }
-    str++;
+    str = (char *)str +
+          1;  // для увеличения адреса на 1 байт, str++ может не работать
   }
   return flag ? (char *)str : S21_NULL;
 }

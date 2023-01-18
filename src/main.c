@@ -30,17 +30,12 @@ void run_all_testcases() {
 }
 
 int main() {
-  // run_all_testcases();
+  run_all_testcases();
 
-  double d = 123456.78;
-
-  char buf[8192];
-  char s21_buf[8192];
-  const char *format = "aa bb %.12f cc";
-  sprintf(buf, format, d);
-  s21_sprintf(s21_buf, format, d);
-  printf("    buf = %s\n", buf);
-  printf("s21_buf = %s\n", s21_buf);
+  // double a = 123.456e33;
+  // char out[100];
+  // sprintf(out, "% ", a);
+  // printf("%s\n", out);
 
   return 0;
 }

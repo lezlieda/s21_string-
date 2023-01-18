@@ -3,7 +3,7 @@
 void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
   int flag = 0;
   if (src == S21_NULL || str == S21_NULL) flag = 1;
-  char *res;
+  char *res = S21_NULL;
   if (!flag) {
     s21_size_t len_src = s21_strlen((char *)src);
     s21_size_t len_str = s21_strlen((char *)str);
@@ -30,5 +30,5 @@ void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
       *p = '\0';
     }
   }
-  return !flag ? (char *)res : S21_NULL;
+  return res;
 }

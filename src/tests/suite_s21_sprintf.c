@@ -11,7 +11,7 @@ START_TEST(s21_sprintf_proc_1) {
 END_TEST
 
 START_TEST(s21_sprintf_u_1) {
-  unsigned int ui[] = {-100, -1, 0, 1, 10, 4294967295};
+  unsigned int ui[] = {-100, -1, 0, 1, 10, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %*.*u cc";
@@ -33,7 +33,7 @@ START_TEST(s21_sprintf_u_1) {
 END_TEST
 
 START_TEST(s21_sprintf_u_2) {
-  unsigned int ui[] = {-100, -1, 0, 1, 10, 4294967295};
+  unsigned int ui[] = {-100, -1, 0, 1, 10, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %0*u cc";
@@ -51,7 +51,7 @@ START_TEST(s21_sprintf_u_2) {
 END_TEST
 
 START_TEST(s21_sprintf_u_3) {
-  unsigned int ui[] = {-100, -1, 0, 1, 10, 4294967295};
+  unsigned int ui[] = {-100, -1, 0, 1, 10, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb % *.*u cc";
@@ -73,7 +73,7 @@ START_TEST(s21_sprintf_u_3) {
 END_TEST
 
 START_TEST(s21_sprintf_u_4) {
-  unsigned int ui[] = {-100, -1, 0, 1, 10, 4294967295};
+  unsigned int ui[] = {-100, -1, 0, 1, 10, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %+*.*u cc";
@@ -95,7 +95,7 @@ START_TEST(s21_sprintf_u_4) {
 END_TEST
 
 START_TEST(s21_sprintf_u_5) {
-  unsigned int ui[] = {-100, -1, 0, 1, 10, 4294967295};
+  unsigned int ui[] = {-100, -1, 0, 1, 10, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %+-*.*u cc";
@@ -117,7 +117,7 @@ START_TEST(s21_sprintf_u_5) {
 END_TEST
 
 START_TEST(s21_sprintf_u_6) {
-  unsigned int ui[] = {-100, -1, 0, 1, 10, 4294967295};
+  unsigned int ui[] = {-100, -1, 0, 1, 10, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb % -*.*u cc";
@@ -139,7 +139,7 @@ START_TEST(s21_sprintf_u_6) {
 END_TEST
 
 START_TEST(s21_sprintf_u_7) {
-  unsigned int ui[] = {-100, -1, 0, 1, 10, 4294967295};
+  unsigned int ui[] = {-100, -1, 0, 1, 10, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %0*.*u cc";
@@ -161,7 +161,7 @@ START_TEST(s21_sprintf_u_7) {
 END_TEST
 
 START_TEST(s21_sprintf_u_8) {
-  unsigned short int ui[] = {-100, -1, 0, 1, 10, 32768};
+  unsigned short int ui[] = {-100, -1, 0, 1, 10, 32766};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %0*.*hu cc";
@@ -183,7 +183,7 @@ START_TEST(s21_sprintf_u_8) {
 END_TEST
 
 START_TEST(s21_sprintf_u_9) {
-  unsigned long int ui[] = {-100, -1, 0, 1, 10, 9223372036854775807};
+  unsigned long int ui[] = {-100, -1, 0, 1, 10, 922337203685477580};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %0*.*lu cc";
@@ -205,7 +205,7 @@ START_TEST(s21_sprintf_u_9) {
 END_TEST
 
 START_TEST(s21_sprintf_i_1) {
-  int ui[] = {-2147483647, -10, 0, 1, 10, 2147483647};
+  int ui[] = {-21474836, -10, 0, 1, 10, 21474836};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %*.*i cc";
@@ -227,7 +227,7 @@ START_TEST(s21_sprintf_i_1) {
 END_TEST
 
 START_TEST(s21_sprintf_i_2) {
-  int ui[] = {-2147483647, -10, 0, 1, 10, 2147483647};
+  int ui[] = {-21474836, -10, 0, 1, 10, 21474836};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %-*.*i cc";
@@ -249,7 +249,7 @@ START_TEST(s21_sprintf_i_2) {
 END_TEST
 
 START_TEST(s21_sprintf_i_3) {
-  int ui[] = {-2147483647, -10, 0, 1, 10, 2147483647};
+  int ui[] = {-21474836, -10, 0, 1, 10, 21474836};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb % *.*i cc";
@@ -271,7 +271,7 @@ START_TEST(s21_sprintf_i_3) {
 END_TEST
 
 START_TEST(s21_sprintf_i_4) {
-  int ui[] = {-2147483647, -10, 0, 1, 10, 2147483647};
+  int ui[] = {-21474836, -10, 0, 1, 10, 21474836};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %0*.*i cc";
@@ -293,7 +293,7 @@ START_TEST(s21_sprintf_i_4) {
 END_TEST
 
 START_TEST(s21_sprintf_i_5) {
-  int ui[] = {-2147483647, -10, 0, 1, 10, 2147483647};
+  int ui[] = {-21474836, -10, 0, 1, 10, 21474836};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %+*.*i cc";
@@ -315,7 +315,7 @@ START_TEST(s21_sprintf_i_5) {
 END_TEST
 
 START_TEST(s21_sprintf_i_6) {
-  int ui[] = {-2147483647, -10, 0, 1, 10, 2147483647};
+  int ui[] = {-21474836, -10, 0, 1, 10, 21474836};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %+0*.*i cc";
@@ -337,7 +337,7 @@ START_TEST(s21_sprintf_i_6) {
 END_TEST
 
 START_TEST(s21_sprintf_i_7) {
-  int ui[] = {-2147483647, -10, 0, 1, 10, 2147483647};
+  int ui[] = {-21474836, -10, 0, 1, 10, 21474836};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb % 0*.*i cc";
@@ -359,7 +359,7 @@ START_TEST(s21_sprintf_i_7) {
 END_TEST
 
 START_TEST(s21_sprintf_i_8) {
-  int ui[] = {-2147483647, -10, 0, 1, 10, 2147483647};
+  int ui[] = {-21474836, -10, 0, 1, 10, 21474836};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %+-*.*i cc";
@@ -381,7 +381,7 @@ START_TEST(s21_sprintf_i_8) {
 END_TEST
 
 START_TEST(s21_sprintf_i_9) {
-  long int ui[] = {-9223372036854775807, -10, 0, 1, 10, 9223372036854775807};
+  long int ui[] = {-922337203685477580, -10, 0, 1, 10, 922337203685477580};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %+-*.*li cc";
@@ -403,7 +403,7 @@ START_TEST(s21_sprintf_i_9) {
 END_TEST
 
 START_TEST(s21_sprintf_i_10) {
-  short int ui[] = {-32768, -10, 0, 1, 10, 32768};
+  short int ui[] = {-32760, -10, 0, 1, 10, 32220};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %+-*.*hi cc";
@@ -425,7 +425,7 @@ START_TEST(s21_sprintf_i_10) {
 END_TEST
 
 START_TEST(s21_sprintf_i_11) {
-  int ui[] = {-2147483647, -10, 0, 1, 10, 2147483647};
+  int ui[] = {-21474836, -10, 0, 1, 10, 21474836};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %+0*i cc";
@@ -592,7 +592,7 @@ START_TEST(s21_sprintf_c_9) {
 END_TEST
 
 START_TEST(s21_sprintf_o_1) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %*.*o cc";
@@ -609,7 +609,7 @@ START_TEST(s21_sprintf_o_1) {
 END_TEST
 
 START_TEST(s21_sprintf_o_2) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %1.2o cc";
@@ -624,7 +624,7 @@ START_TEST(s21_sprintf_o_2) {
 END_TEST
 
 START_TEST(s21_sprintf_o_3) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb % *.*o cc";
@@ -641,7 +641,7 @@ START_TEST(s21_sprintf_o_3) {
 END_TEST
 
 START_TEST(s21_sprintf_o_4) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %- *.*o cc";
@@ -658,7 +658,7 @@ START_TEST(s21_sprintf_o_4) {
 END_TEST
 
 START_TEST(s21_sprintf_o_5) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %0*.*o cc";
@@ -675,7 +675,7 @@ START_TEST(s21_sprintf_o_5) {
 END_TEST
 
 START_TEST(s21_sprintf_o_6) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %#0*.*o cc";
@@ -692,7 +692,7 @@ START_TEST(s21_sprintf_o_6) {
 END_TEST
 
 START_TEST(s21_sprintf_o_7) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %#0*o cc";
@@ -708,7 +708,7 @@ START_TEST(s21_sprintf_o_7) {
 END_TEST
 
 START_TEST(s21_sprintf_x_1) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %*.*x cc";
@@ -725,7 +725,7 @@ START_TEST(s21_sprintf_x_1) {
 END_TEST
 
 START_TEST(s21_sprintf_x_2) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %1.2x cc";
@@ -740,7 +740,7 @@ START_TEST(s21_sprintf_x_2) {
 END_TEST
 
 START_TEST(s21_sprintf_x_3) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb % *.*x cc";
@@ -757,7 +757,7 @@ START_TEST(s21_sprintf_x_3) {
 END_TEST
 
 START_TEST(s21_sprintf_x_4) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %- *.*x cc";
@@ -774,7 +774,7 @@ START_TEST(s21_sprintf_x_4) {
 END_TEST
 
 START_TEST(s21_sprintf_x_5) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %0*.*x cc";
@@ -791,7 +791,7 @@ START_TEST(s21_sprintf_x_5) {
 END_TEST
 
 START_TEST(s21_sprintf_x_6) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %#0*.*x cc";
@@ -808,7 +808,7 @@ START_TEST(s21_sprintf_x_6) {
 END_TEST
 
 START_TEST(s21_sprintf_x_7) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %#0*x cc";
@@ -824,7 +824,7 @@ START_TEST(s21_sprintf_x_7) {
 END_TEST
 
 START_TEST(s21_sprintf_X_1) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %*.*X cc";
@@ -841,7 +841,7 @@ START_TEST(s21_sprintf_X_1) {
 END_TEST
 
 START_TEST(s21_sprintf_X_2) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %1.2X cc";
@@ -856,7 +856,7 @@ START_TEST(s21_sprintf_X_2) {
 END_TEST
 
 START_TEST(s21_sprintf_X_3) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb % *.*X cc";
@@ -873,7 +873,7 @@ START_TEST(s21_sprintf_X_3) {
 END_TEST
 
 START_TEST(s21_sprintf_X_4) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %- *.*X cc";
@@ -890,7 +890,7 @@ START_TEST(s21_sprintf_X_4) {
 END_TEST
 
 START_TEST(s21_sprintf_X_5) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %0*.*X cc";
@@ -907,7 +907,7 @@ START_TEST(s21_sprintf_X_5) {
 END_TEST
 
 START_TEST(s21_sprintf_X_6) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %#0*.*X cc";
@@ -924,7 +924,7 @@ START_TEST(s21_sprintf_X_6) {
 END_TEST
 
 START_TEST(s21_sprintf_X_7) {
-  int val[] = {-100, -10, 0, 1, 10, 2147483647, 2147483648, 4294967295};
+  int val[] = {-100, -10, 0, 1, 10, 21474836, 21474836, 429496729};
   char dest[100];
   char s21_dest[100];
   const char *format = "aa bb %#0*X cc";

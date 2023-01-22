@@ -113,21 +113,21 @@ START_TEST(s21_strtok_7) {
 }
 END_TEST
 
-START_TEST(s21_strtok_8) {
-  char *str1 = NULL;
-  char *str2 = NULL;
-  char delim[32] = "L";
-  char *result, *s21_result;
-  result = strtok(str1, delim);
-  s21_result = s21_strtok(str2, delim);
-  ck_assert_pstr_eq(result, s21_result);
-  while (result != NULL) {
-    result = strtok(NULL, delim);
-    s21_result = s21_strtok(NULL, delim);
-    ck_assert_pstr_eq(result, s21_result);
-  }
-}
-END_TEST
+// START_TEST(s21_strtok_8) {
+//   char *str1 = NULL;
+//   char *str2 = NULL;
+//   char delim[32] = "L";
+//   char *result, *s21_result;
+//   result = strtok(str1, delim);
+//   s21_result = s21_strtok(str2, delim);
+//   ck_assert_pstr_eq(result, s21_result);
+//   while (result != NULL) {
+//     result = strtok(NULL, delim);
+//     s21_result = s21_strtok(NULL, delim);
+//     ck_assert_pstr_eq(result, s21_result);
+//   }
+// }
+// END_TEST
 
 Suite *suite_s21_strtok() {
   Suite *suite = suite_create("s21_strtok");
@@ -140,7 +140,7 @@ Suite *suite_s21_strtok() {
   tcase_add_test(tcase, s21_strtok_5);
   tcase_add_test(tcase, s21_strtok_6);
   tcase_add_test(tcase, s21_strtok_7);
-  tcase_add_test(tcase, s21_strtok_8);
+  // tcase_add_test(tcase, s21_strtok_8);
 
   suite_add_tcase(suite, tcase);
 

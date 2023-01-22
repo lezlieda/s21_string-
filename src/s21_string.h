@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <wchar.h>
 
-#define S21_NULL ((void *)0)
+#define s21_NULL ((void *)0)
 
 typedef unsigned long s21_size_t;
 
@@ -26,7 +26,7 @@ char *s21_strcpy(char *dest, const char *src);
 char *s21_strncpy(char *dest, const char *src, s21_size_t n);
 s21_size_t s21_strcspn(const char *str1, const char *str2);
 char *s21_strerror(int errnum);  // TODO
-s21_size_t s21_strlen(char *str);
+s21_size_t s21_strlen(const char *str);
 char *s21_strpbrk(const char *str1, const char *str2);
 char *s21_strrchr(const char *str, int c);
 s21_size_t s21_strspn(const char *str1, const char *str2);
@@ -58,6 +58,46 @@ int s21_sprinter_char(char *dest, s21_sprintf_opt opt, int c);
 int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c);
 
 int s21_is_delim(char c, const char *delim);
+
+// SSCANF BEGIN
+#ifndef INT_MAX
+#define INT_MAX 2147483640;
+#endif
+typedef long long ll;
+
+typedef struct Token {
+  int width;
+  char width_star;
+  char length_l;
+  char length_L;
+  char length_h;
+  char sign;
+  char spec;
+} Token;
+
+int is_space(char c);
+int is_octa(char c);
+int is_spec(char c);
+int is_digit(char c);
+int hexchar_to_digit(char c);
+int s21_getchar(char **str, char *c);
+int s21_getstring(char **str, char *string, Token *tk);
+ll s21_stoi(char **data, Token *tk);
+ll hex_to_dec(char **data, Token *tk);
+ll octa_to_int(char **data, Token *tk);
+ll get_any_number(char **data, Token *tk);
+ll func_for_int(Token *tk, char **data);
+void implementation_int(Token *tk, int *res, va_list *args, char **data);
+void token_config(char **fmt, Token *tk);
+void reset_specs(Token *tk);
+int what_sign(char c);
+int is_inf(const char *str);
+int is_nan(const char *str);
+void final_float(Token *tk, int *res, va_list *args, long double ans);
+long double mantissa(char **data, int *width);
+long double get_float(char **str, Token *tk);
+int s21_sscanf(const char *str, const char *format, ...);
+// SSCANF END
 
 /* Special string processing functions (from the String class in C#) */
 void *s21_to_upper(const char *str);

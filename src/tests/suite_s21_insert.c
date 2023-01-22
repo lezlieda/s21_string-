@@ -2,8 +2,8 @@
 #include "../suitecases.h"
 
 START_TEST(s21_insert_1) {
-  char *src = "Hello, world!";
-  char *str = "my ";
+  const char *src = "Hello, world!";
+  const char *str = "my ";
   char *res = s21_insert(src, str, 0);
   ck_assert_str_eq(res, "my Hello, world!");
   if (res != NULL) free(res);
@@ -11,8 +11,8 @@ START_TEST(s21_insert_1) {
 END_TEST
 
 START_TEST(s21_insert_2) {
-  char *src = "Hello, world!";
-  char *str = "my ";
+  const char *src = "Hello, world!";
+  const char *str = "my ";
   char *res = s21_insert(src, str, 7);
   ck_assert_str_eq(res, "Hello, my world!");
   if (res != NULL) free(res);
@@ -20,8 +20,8 @@ START_TEST(s21_insert_2) {
 END_TEST
 
 START_TEST(s21_insert_3) {
-  char *src = "Hello, world!";
-  char *str = "my ";
+  const char *src = "Hello, world!";
+  const char *str = "my ";
   char *res = s21_insert(src, str, 13);
   ck_assert_str_eq(res, "Hello, world!my ");
   if (res != NULL) free(res);
@@ -29,8 +29,8 @@ START_TEST(s21_insert_3) {
 END_TEST
 
 START_TEST(s21_insert_4) {
-  char *src = "Hello, world!";
-  char *str = "my ";
+  const char *src = "Hello, world!";
+  const char *str = "my ";
   char *res = s21_insert(src, str, 144);
   ck_assert_ptr_null(res);
   if (res != NULL) free(res);
@@ -38,8 +38,8 @@ START_TEST(s21_insert_4) {
 END_TEST
 
 START_TEST(s21_insert_5) {
-  char *src = "Hello, world!";
-  char *str = NULL;
+  const char *src = "Hello, world!";
+  const char *str = NULL;
   char *res = s21_insert(src, str, 2);
   ck_assert_ptr_null(res);
   if (res != NULL) free(res);
@@ -47,8 +47,8 @@ START_TEST(s21_insert_5) {
 END_TEST
 
 START_TEST(s21_insert_6) {
-  char *src = NULL;
-  char *str = "my ";
+  const char *src = NULL;
+  const char *str = "my ";
   char *res = s21_insert(src, str, 2);
   ck_assert_ptr_null(res);
   if (res != NULL) free(res);

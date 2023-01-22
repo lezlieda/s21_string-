@@ -27,6 +27,7 @@ Suite *suite_s21_strrchr();
 Suite *suite_s21_strpbrk();
 Suite *suite_s21_strerror();
 Suite *suite_s21_sprintf();
+Suite *suite_s21_sscanf();
 
 Suite *suite_s21_to_upper();
 Suite *suite_s21_to_lower();

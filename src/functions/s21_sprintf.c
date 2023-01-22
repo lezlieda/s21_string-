@@ -26,7 +26,7 @@ int s21_atoi(const char *str) {  // перевод строки в число >=
 }
 
 void s21_strrev(char *str) {
-  int len = s21_strlen(str);
+  int len = s21_strlen((const char *)str);
   for (int i = 0; i < len / 2; i++) {
     char tmp = str[i];
     str[i] = str[len - i - 1];
@@ -84,7 +84,7 @@ int s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args) {
       format++;
       res++;
     } else {
-      char numbuf[16] = "\0";
+      char numbuf[64] = "\0";
       int i = 0;
       while (s21_is_digit(*format)) {
         numbuf[i++] = *format++;
@@ -102,7 +102,7 @@ int s21_opt_parse(const char *format, s21_sprintf_opt *opt, va_list args) {
       format++;
       res++;
     } else {
-      char numbuf[16] = "\0";
+      char numbuf[64] = "\0";
       int i = 0;
       while (s21_is_digit(*format)) {
         numbuf[i++] = *format++;
@@ -150,7 +150,8 @@ int s21_sprinter_char(char *dest, s21_sprintf_opt opt, int c) {
       char_width = 4;
     }
     wcstombs(NULL, wstr, 0);
-    char *str = (char *)malloc(sizeof(char) * (char_width + 1));
+    // char *str = (char *)malloc(sizeof(char) * (char_width + 1));
+    char *str = (char *)calloc(char_width + 1, sizeof(char));
     wcstombs(str, wstr, char_width + 1);
     if (opt.fl_minus == 1) {
       for (int i = 0; i < char_width; i++) {
@@ -171,7 +172,7 @@ int s21_sprinter_char(char *dest, s21_sprintf_opt opt, int c) {
         res++;
       }
     }
-    free(str);
+    if (str != s21_NULL) free(str);
   } else {
     if (opt.width < 2) {
       s21_putch(&dest, sym);
@@ -227,21 +228,21 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
   /***  добавляем знаки  ***/
   int pos = 0;  // смещение для добавления знаков
   if (sign == 1) {
-    char *tmp = s21_insert(strptr, "-", 0);
+    char *tmp = s21_insert((const char *)strptr, "-", 0);
     s21_strncpy(strptr, tmp, len + 1);
-    free(tmp);
+    if (tmp != s21_NULL) free(tmp);
     len++;
     pos++;
   } else if (opt.fl_plus == 1) {
-    char *tmp = s21_insert(strptr, "+", 0);
+    char *tmp = s21_insert((const char *)strptr, "+", 0);
     s21_strncpy(strptr, tmp, len + 1);
-    free(tmp);
+    if (tmp != s21_NULL) free(tmp);
     len++;
     pos++;
   } else if (opt.fl_space == 1) {
-    char *tmp = s21_insert(strptr, " ", 0);
+    char *tmp = s21_insert((const char *)strptr, " ", 0);
     s21_strncpy(strptr, tmp, len + 1);
-    free(tmp);
+    if (tmp != s21_NULL) free(tmp);
     len++;
     pos++;
   }
@@ -249,9 +250,9 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
   if (opt.precision > len - 1) {  // добавляем нули
     int op = opt.precision - len + pos;
     while (op-- > 0) {
-      char *tmp = s21_insert(strptr, "0", pos);
+      char *tmp = s21_insert((const char *)strptr, "0", pos);
       s21_strncpy(strptr, tmp, len + 1);
-      free(tmp);
+      if (tmp != s21_NULL) free(tmp);
       len++;
     }
   }
@@ -259,18 +260,18 @@ int s21_sprinter_int(char *dest, s21_sprintf_opt opt, long long int c) {
     int ow = opt.width - len;
     while (ow-- > 0) {
       if (opt.fl_minus == 1) {
-        char *tmp = s21_insert(strptr, " ", len);
+        char *tmp = s21_insert((const char *)strptr, " ", len);
         s21_strncpy(strptr, tmp, len + 1);
-        free(tmp);
+        if (tmp != s21_NULL) free(tmp);
       } else {
         if (opt.fl_zero == 1 && opt.precision == -1) {
-          char *tmp = s21_insert(strptr, "0", pos);
+          char *tmp = s21_insert((const char *)strptr, "0", pos);
           s21_strncpy(strptr, tmp, len + 1);
-          free(tmp);
+          if (tmp != s21_NULL) free(tmp);
         } else {
-          char *tmp = s21_insert(strptr, " ", 0);
+          char *tmp = s21_insert((const char *)strptr, " ", 0);
           s21_strncpy(strptr, tmp, len + 1);
-          free(tmp);
+          if (tmp != s21_NULL) free(tmp);
         }
       }
       len++;
@@ -313,15 +314,15 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
   len = s21_utoa(strptr, num, base);   // формируем строку в str
   if (opt.fl_hash == 1 && num != 0) {  // флаг #
     if (opt.spec == 'o') {
-      char *tmp = s21_insert(strptr, "0", 0);
+      char *tmp = s21_insert((const char *)strptr, "0", 0);
       s21_strncpy(strptr, tmp, len + 1);
       len++;
-      free(tmp);
+      if (tmp != s21_NULL) free(tmp);
     } else if (opt.spec == 'x' || opt.spec == 'X') {
-      char *tmp = s21_insert(strptr, "0x", 0);
+      char *tmp = s21_insert((const char *)strptr, "0x", 0);
       s21_strncpy(strptr, tmp, len + 2);
       len += 2;
-      free(tmp);
+      if (tmp != s21_NULL) free(tmp);
     }
   }
   if (opt.precision == 0 &&
@@ -330,10 +331,10 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
     len--;
   }
   if (opt.spec == 'p') {
-    char *tmp = s21_insert(strptr, "0x", 0);
+    char *tmp = s21_insert((const char *)strptr, "0x", 0);
     s21_strncpy(strptr, tmp, len + 2);
     len += 2;
-    free(tmp);
+    if (tmp != s21_NULL) free(tmp);
   }
   /***  добавляем пробелы и нули  ***/
   int pos = 0;  // смещение для добавления знаков
@@ -349,9 +350,9 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
       op--;
     }
     while (op-- > 0) {
-      char *tmp = s21_insert(strptr, "0", pos);
+      char *tmp = s21_insert((const char *)strptr, "0", pos);
       s21_strncpy(strptr, tmp, len + 1);
-      free(tmp);
+      if (tmp != s21_NULL) free(tmp);
       len++;
     }
   }
@@ -359,18 +360,18 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
     int ow = opt.width - len;
     while (ow-- > 0) {
       if (opt.fl_minus == 1) {
-        char *tmp = s21_insert(strptr, " ", len);
+        char *tmp = s21_insert((const char *)strptr, " ", len);
         s21_strncpy(strptr, tmp, len + 1);
-        free(tmp);
+        if (tmp != s21_NULL) free(tmp);
       } else {
         if (opt.fl_zero == 1 && opt.precision == -1) {
-          char *tmp = s21_insert(strptr, "0", pos);
+          char *tmp = s21_insert((const char *)strptr, "0", pos);
           s21_strncpy(strptr, tmp, len + 1);
-          free(tmp);
+          if (tmp != s21_NULL) free(tmp);
         } else {
-          char *tmp = s21_insert(strptr, " ", 0);
+          char *tmp = s21_insert((const char *)strptr, " ", 0);
           s21_strncpy(strptr, tmp, len + 1);
-          free(tmp);
+          if (tmp != s21_NULL) free(tmp);
         }
       }
       len++;
@@ -379,7 +380,7 @@ int s21_sprinter_uint(char *dest, s21_sprintf_opt opt,
   if (opt.spec == 'X') {
     char *tmp = s21_to_upper(strptr);
     s21_strncpy(strptr, tmp, len);
-    free(tmp);
+    if (tmp != s21_NULL) free(tmp);
   }
   return len;
 }
@@ -396,7 +397,7 @@ int s21_wstrToStr(char **dest, wchar_t *wstr) {
   s21_size_t res = 0;
   int wlen = 0;
   wlen = s21_wcslen(wstr);
-  char *str = (char *)malloc(wlen * 4 + 1);
+  char *str = (char *)calloc(wlen * 4 + 1, sizeof(char));
   *dest = str;
   res = wcstombs(str, wstr, wlen * 4 + 1);
   return res;
@@ -408,7 +409,7 @@ int s21_sprinter_str(char *dest, s21_sprintf_opt opt, char *c) {
   if (c == NULL) {
     c = "(null)";
   }
-  len = s21_strlen(c);
+  len = s21_strlen((const char *)c);
   if (opt.precision < len && opt.precision != -1) {  // если точность меньше
     len = opt.precision;  // длины строки - обрезаем строку до точности
   }
@@ -421,17 +422,17 @@ int s21_sprinter_str(char *dest, s21_sprintf_opt opt, char *c) {
     int ow = opt.width - len;
     while (ow-- > 0) {
       if (opt.fl_minus == 1) {
-        char *tmp = s21_insert(strptr, " ", len);
+        char *tmp = s21_insert((const char *)strptr, " ", len);
         s21_strncpy(strptr, tmp, len + 1);
-        free(tmp);
+        if (tmp != s21_NULL) free(tmp);
       } else {
         char ins[2] = " ";
         if (opt.fl_zero == 1) {
           ins[0] = '0';
         }
-        char *tmp = s21_insert(strptr, ins, 0);
+        char *tmp = s21_insert((const char *)strptr, ins, 0);
         s21_strncpy(strptr, tmp, len + 1);
-        free(tmp);
+        if (tmp != s21_NULL) free(tmp);
       }
       len++;
     }
@@ -490,29 +491,29 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
     while (range-- > 0) {
       int d = intpart / s21_pow(10, range);
       intpart -= (double)d * s21_pow(10, range);
-      char ins[2];
+      char ins[2] = "\0";
       s21_utoa(ins, d, 10);
-      char *tmp = s21_insert(strptr, ins, len);
+      char *tmp = s21_insert((const char *)strptr, ins, len);
       s21_strncpy(strptr, tmp, len + 1);
-      free(tmp);
+      if (tmp != s21_NULL) free(tmp);
       len++;
     }
     /***  записываем дробную часть  ***/
     if (opt.precision > 0 || opt.fl_hash == 1) {
-      char *tmp = s21_insert(strptr, ".", len);
+      char *tmp = s21_insert((const char *)strptr, ".", len);
       s21_strncpy(strptr, tmp, len + 1);
-      free(tmp);
+      if (tmp != s21_NULL) free(tmp);
       len++;
       while (opt.precision-- > 0) {
         fracpart *= 10;
         int d =
             opt.precision == 0 ? (int)(fracpart + 0.5) : (int)(fracpart + .01);
         fracpart = modf(fracpart, &intpart);
-        char ins[2];
+        char ins[2] = "\0";
         s21_utoa(ins, d, 10);
-        tmp = s21_insert(strptr, ins, len);
+        tmp = s21_insert((const char *)strptr, ins, len);
         s21_strncpy(strptr, tmp, len + 1);
-        free(tmp);
+        if (tmp != s21_NULL) free(tmp);
         len++;
       }
     }
@@ -536,8 +537,8 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
         fl[0] = ' ';
       }
     }
-    char *tmp = s21_insert(strptr, fl, 0);
-    s21_strncpy(strptr, tmp, s21_strlen(tmp));
+    char *tmp = s21_insert((const char *)strptr, fl, 0);
+    s21_strncpy(strptr, tmp, s21_strlen((const char *)tmp));
     free(tmp);
     len++;
     pos++;
@@ -546,18 +547,18 @@ int s21_sprinter_float(char *dest, s21_sprintf_opt opt, double c) {
     int ow = opt.width - len;
     while (ow-- > 0) {
       if (opt.fl_minus == 1) {
-        char *tmp = s21_insert(strptr, " ", len);
+        char *tmp = s21_insert((const char *)strptr, " ", len);
         s21_strncpy(strptr, tmp, len + 1);
-        free(tmp);
+        if (tmp != s21_NULL) free(tmp);
       } else {
         if (opt.fl_zero == 1 && flag == 0) {
-          char *tmp = s21_insert(strptr, "0", pos);
+          char *tmp = s21_insert((const char *)strptr, "0", pos);
           s21_strncpy(strptr, tmp, len + 1);
-          free(tmp);
+          if (tmp != s21_NULL) free(tmp);
         } else {
-          char *tmp = s21_insert(strptr, " ", 0);
+          char *tmp = s21_insert((const char *)strptr, " ", 0);
           s21_strncpy(strptr, tmp, len + 1);
-          free(tmp);
+          if (tmp != s21_NULL) free(tmp);
         }
       }
       len++;
@@ -610,7 +611,7 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
           if (opt.len_l == 1) {
             s21_wstrToStr(&tmp, va_arg(args, wchar_t *));
             step = s21_sprinter_str(str, opt, tmp);
-            free(tmp);
+            if (tmp != s21_NULL) free(tmp);
           } else {
             step = s21_sprinter_str(str, opt, va_arg(args, char *));
           }
@@ -651,8 +652,10 @@ int s21_vsprintf(char *str, const char *format, va_list args) {
 int s21_sprintf(char *str, const char *format, ...) {
   va_list args;
   va_start(args, format);
-  *str = '\0';
-  int res = s21_vsprintf(str, format, args);
+  char *tmp = calloc(8192, sizeof(char));
+  int res = s21_vsprintf(tmp, format, args);
+  s21_strncpy(str, tmp, res + 1);
+  if (tmp != s21_NULL) free(tmp);
   va_end(args);
   return res;
 }

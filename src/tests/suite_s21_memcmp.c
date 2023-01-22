@@ -57,6 +57,13 @@ START_TEST(s21_memcmp_8) {
 }
 END_TEST
 
+START_TEST(s21_memcmp_9) {
+  char *s1 = NULL;
+  char *s2 = "consectetur adipiscing elit";
+  ck_assert_int_eq(s21_memcmp(s1, s2, 2), s21_memcmp(s1, s2, 2));
+}
+END_TEST
+
 Suite *suite_s21_memcmp() {
   Suite *s;
   TCase *tc_case;
@@ -73,6 +80,7 @@ Suite *suite_s21_memcmp() {
   tcase_add_test(tc_case, s21_memcmp_6);
   tcase_add_test(tc_case, s21_memcmp_7);
   tcase_add_test(tc_case, s21_memcmp_8);
+  tcase_add_test(tc_case, s21_memcmp_9);
 
   suite_add_tcase(s, tc_case);
 

@@ -5,10 +5,10 @@ char *s21_strtok(char *str, const char *delim) {
   static char *last;  // класс static позволяет сохранять значение переменной
                       // между вызовами функции
   char *res;
-  if (str == S21_NULL) {
+  if (str == s21_NULL) {
     str = last;  // если str == NULL, то берем последнее значение str
   }
-  if (str == S21_NULL) {
+  if (str == s21_NULL) {
     flag = 1;  // если str == NULL, то возвращаем NULL
   }
   if (!flag) {
@@ -28,6 +28,6 @@ char *s21_strtok(char *str, const char *delim) {
     }
     last = str;  // запоминаем последнее значение str
   }
-  if (flag) res = S21_NULL;
+  if (flag) res = s21_NULL;
   return res;
 }

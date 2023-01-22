@@ -2,11 +2,12 @@
 
 void *s21_to_upper(const char *str) {
   int flag = 0;
-  if (str == S21_NULL) flag = 1;
+  if (str == s21_NULL) flag = 1;
   char *res;
   if (!flag) {
     s21_size_t len = s21_strlen((char *)str);
-    char *p = (char *)malloc(len + 1);
+    // char *p = (char *)malloc(len + 1);
+    char *p = (char *)calloc(len + 1, sizeof(char));
     s21_sprintf(p, "%s", str);
     res = p;
     while (*p != '\0') {
@@ -14,5 +15,5 @@ void *s21_to_upper(const char *str) {
       p++;
     }
   }
-  return !flag ? (char *)res : S21_NULL;
+  return !flag ? (char *)res : s21_NULL;
 }

@@ -3,7 +3,7 @@
 
 START_TEST(s21_memset_1) {
   char str[64] = "Lorem ipsum";
-  ck_assert_str_eq(memset(str, 'a', 64), s21_memset(str, 'a', 64));
+  ck_assert_str_eq(memset(str, 'a', 63), s21_memset(str, 'a', 63));
 }
 END_TEST
 
@@ -22,7 +22,7 @@ END_TEST
 
 START_TEST(s21_memset_4) {
   char str[64] = "\0";
-  ck_assert_str_eq(memset(str, 'a', 64), s21_memset(str, 'a', 64));
+  ck_assert_str_eq(memset(str, 'a', 63), s21_memset(str, 'a', 63));
 }
 END_TEST
 
@@ -41,7 +41,7 @@ END_TEST
 
 START_TEST(s21_memset_7) {
   char str[64] = "Lorem ipsum";
-  ck_assert_str_eq(memset(str, '\0', 64), s21_memset(str, '\0', 64));
+  ck_assert_str_eq(memset(str, '\0', 63), s21_memset(str, '\0', 63));
 }
 END_TEST
 
@@ -60,7 +60,7 @@ END_TEST
 
 START_TEST(s21_memset_10) {
   char str[64] = "\0";
-  ck_assert_str_eq(memset(str, '\0', 64), s21_memset(str, '\0', 64));
+  ck_assert_str_eq(memset(str, '\0', 63), s21_memset(str, '\0', 63));
 }
 END_TEST
 
